@@ -1,0 +1,58 @@
+export const darkTheme = {
+  body: "#15141f",
+  background: "#11101d",
+  icons: "#7B2CBF",
+  logoName: "#F9F9F9",
+  linkItem: "#F9F9F9",
+  titleHeading: "#D6D6D8",
+  text: "#F9F9F9",
+  inputBorder: "#D6D6D8",
+  buttonIcon: "#F9F9F9",
+  btnBorder: "#F9F9F9",
+  btnBg: "#7B2CBF",
+  btnHoverBg: "#9556CC",
+  btnHoverText: "#9556CC",
+  notificationBg: "#7B2CBF",
+  badge: "#E8E7E9",
+  views: "#F9F9F9",
+  comment: "#15141f",
+  profileDashboard : "#171628",
+};
+
+export const lightTheme = {
+  body: "#fff",
+  linkItem: "#CFCFD0",
+  icons: "#7B2CBF",
+  logoName: "#7B2CBF",
+  text: "#9556CC",
+  buttonIcon: "#9556CC",
+  background: "#F9F9F9",
+  titleHeading: "#D6D6D8",
+  inputBorder: "#7B2CBF",
+  btnBorder: "#7B2CBF",
+  btnBg: "#f6f6f6",
+  btnHoverBg: "#9556CC",
+  btnHoverText: "#F9F9F9",
+  notificationBg: "#E8E7E9",
+  badge: "#7B2CBF",
+  views: "#15141f",
+  comment: "#fff",
+  profileDashboard : "#f6f6f6",
+
+};
+
+// purple4: "#B68BDC",
+// purple5: "#E5D5F2", // black1: "#110F15",
+// black2: "#413F44",
+// black3: "#88878A",
+// black4: "#CFCFD0",
+// black5: "#BFBDC1",
+// black6: "#D6D6D8",
+// black7: "#E8E7E9",
+
+export const others = {
+  orange1: "#FF6D00",
+  orange2: "#FF9648",
+  orange3: "#FFB076",
+  orange4: "#FFD8BA",
+};
