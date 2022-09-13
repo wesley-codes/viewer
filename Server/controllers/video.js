@@ -13,19 +13,10 @@ const createVideo = async (req, res, next) => {
     // // console.log(video);
     // res.status(200).json({ msg: "Video sucessfully uploaded", video });
 
-const files = req.files
-
-const {thumbnail , video} = files
-
+console.log("request body",req.body)
+console.log("",req.files)
 
 
-
-
-
-const result1 = await uploadFile({thumbnail, video})
-
-
-console.log(result1)
   } catch (err) {
     next(err);
   }

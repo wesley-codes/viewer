@@ -15,14 +15,17 @@ const {
 } = require("../controllers/video");
 const router = require("express").Router();
 const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
+
+
+const storage = multer.memoryStorage()
+const upload = multer({storage:storage})
 
 //CREATE VIDEO
 const multiUpload = upload.fields([
   { name: "thumbnail", maxCount: 1 },
   { name: "video", maxCount: 1 },
 ]);
-router.post("/", verifyToken, multiUpload , createVideo);
+router.post("/", verifyToken, multiUpload , creabteVideo);
 
 //RANDOM VIDEOS
 router.get("/ran", randomVideos);
