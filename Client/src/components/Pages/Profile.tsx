@@ -25,6 +25,8 @@ import {
 import UploadSVG from "../SVG/Upload";
 import Comment_LG from "../Comments/Comment_LG";
 import Loader from "../Loader/Loader";
+import SignUp from "./Signup";
+import SignIn from "./SignIn";
 
 const Container = styled.div`
   position: absolute;
@@ -99,25 +101,27 @@ const Profile = () => {
           </TabPane>
 
           <TabPane title="ABOUT">
-            <VideoContaianer>
+            {/* <VideoContaianer>
               <VideoBox>
                 <div>
                   <Coming_Soon width={300} />
                 </div>
               </VideoBox>
-            </VideoContaianer>
+            </VideoContaianer> */}
+            <SignIn/> 
           </TabPane>
 
 
 
           <TabPane title="CHANNELS">
-            <VideoContaianer>
+            {/* <VideoContaianer>
               <VideoBox>
                 <div>
                   <Coming_Soon width={300} />
                 </div>
               </VideoBox>
-            </VideoContaianer>
+            </VideoContaianer> */}
+            <SignUp/>
           </TabPane>
         </Tabs>
       </Container>

@@ -3,18 +3,24 @@ const Video = require("../models/video");
 const User = require("../models/user");
  const crypto = require("crypto")
  const {uploadFile }= require("./s3")
+
 //TODO NOW USE VIDEOID TO GET VIDEOS
 
 const createVideo = async (req, res, next) => {
   try {
-    // const videoData = {...req.body , videoId:crypto.randomBytes(12).toString("hex")}
-    // const video = new Video({ userId: req.user.id, ...videoData });
     // await video.save();
     // // console.log(video);
-    // res.status(200).json({ msg: "Video sucessfully uploaded", video });
+    console.log(req.files)
+    
+    const {thumbnail, video:videoUrl} = req.files
 
-console.log("request body",req.body)
-console.log("",req.files)
+  const s3Video = await uploadFile(videoUrl[0]) //video uploads first s3 bucket
+   const s3thumnail = await uploadFile(thumbnail[0]) //thumnail uploads to s3 bucket
+   const videoData = {...req.body , videoId:crypto.randomBytes(12).toString("hex"), thumbnail:thumbnail[0].filename, video:videoUrl[0].filename }    //NB : store req.filename in the database
+   const video = new Video({ userId: req.user.id, ...videoData,  });
+   await video.save();
+     res.status(200).json({ msg: "Video sucessfully uploaded", video });
+
 
 
   } catch (err) {
