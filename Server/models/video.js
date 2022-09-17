@@ -17,3 +17,11 @@ const VideoSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("Video", VideoSchema);
+
+
+
+
+
+
+
+// const deletedVideo = await Video.findByIdAndDelete(req.params.id);
