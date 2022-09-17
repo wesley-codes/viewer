@@ -25,12 +25,17 @@ const storage = multer.diskStorage({
 })
 const upload = multer({storage:storage})
 
+
+
 //CREATE VIDEO
 const multiUpload = upload.fields([
   { name: "thumbnail", maxCount: 1 },
   { name: "video", maxCount: 1 },
 ]);
+
+
 router.post("/", verifyToken, multiUpload , createVideo);
+
 
 //RANDOM VIDEOS
 router.get("/ran", randomVideos);

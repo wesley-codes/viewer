@@ -27,6 +27,42 @@ const Browse = () => {
               time={item.time}
             />
           ))}
+             {ThumbnailData.map((item, index) => (
+            <VideoBox
+              key={index}
+              id={item.videoName}
+              imgUrl={item.imgUrl}
+              videoUrl={item.videoUrl}
+              channelName={item.channelName}
+              videoName={item.videoName}
+              views={item.views}
+              time={item.time}
+            />
+          ))}
+             {ThumbnailData.map((item, index) => (
+            <VideoBox
+              key={index}
+              id={item.videoName}
+              imgUrl={item.imgUrl}
+              videoUrl={item.videoUrl}
+              channelName={item.channelName}
+              videoName={item.videoName}
+              views={item.views}
+              time={item.time}
+            />
+          ))}
+             {ThumbnailData.map((item, index) => (
+            <VideoBox
+              key={index}
+              id={item.videoName}
+              imgUrl={item.imgUrl}
+              videoUrl={item.videoUrl}
+              channelName={item.channelName}
+              videoName={item.videoName}
+              views={item.views}
+              time={item.time}
+            />
+          ))}
         </HomeContainer>
       </HomeWrapper>
     </React.Fragment>

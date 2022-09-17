@@ -12,6 +12,7 @@ interface RandomVideoTypes {
   likes: string[];
   dislikes: string[];
   createdAt: string;
+  placeHolder: string
 }
 
 

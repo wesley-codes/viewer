@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import { isTemplateExpression } from "typescript";
 import { useGetUserByIDQuery } from "../../services/VideoApi";
 import { Image } from "../../styles/Navbar.styles";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
+
 import {
   ChannelImg,
   Details,
@@ -26,18 +29,16 @@ interface VideoBoxProps {
   videoName: String;
   time: string;
   views: string;
+  imgAlt?: string;
 }
 
-
-
 interface UserProps {
-  _id : string
-  name : string 
-  email : string 
-  img: string
-  subscribers : string 
-  subscribedUsers : string []
-  
+  _id: string;
+  name: string;
+  email: string;
+  img: string;
+  subscribers: string;
+  subscribedUsers: string[];
 }
 
 const VideoBox = ({
@@ -46,19 +47,17 @@ const VideoBox = ({
   videoUrl,
   channelName,
   videoName,
+  imgAlt,
   time,
   views,
 }: VideoBoxProps) => {
   const [play, setPlay] = useState(false);
+  const [imgSrc, setImgSrc] = useState();
   let timer: number | NodeJS.Timeout | undefined;
-  const {data} = useGetUserByIDQuery(id)
+  const { data } = useGetUserByIDQuery(id);
 
-console.log(data)
+  console.log(data);
   //http://localhost:5000/api/v1/user/find
-
-
-
-
 
   const mouseEnterHandler = () => {
     timer = setTimeout(() => {
@@ -89,7 +88,16 @@ console.log(data)
                 url="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
               ></Player>
             ) : (
-              <VideoThumbnail src={imgUrl} onMouseLeave={mouseLeaveHandler} />
+              <LazyLoadImage
+                src={imgUrl}
+                onMouseLeave={mouseLeaveHandler}
+                effect="blur"
+                width="100%"
+                height="202px"
+                style={{
+                  objectFit:"cover"
+                }}
+              />
             )}
           </VideoWrapper>
         </Link>

@@ -24,7 +24,7 @@ const Home = () => {
         <Title title="Home" />
         <HomeContainer>
         {isLoading && <Loader/>}
-       
+       {isFetching && <Loader/>}
       {isSuccess &&  RandonVideos?.map((item, index) => (
             <VideoBox
               key={index}
@@ -34,6 +34,7 @@ const Home = () => {
               channelName={item.title}
               videoName={item.title}
               views={item.views}
+              imgAlt = {item.title}
               time={item.createdAt}
             />
           ))} 

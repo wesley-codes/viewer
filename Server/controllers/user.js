@@ -15,6 +15,8 @@ const updateUser = async (req, res, next) => {
   }
 };
 
+
+
 const deleteUser = async (req, res, next) => {
   if (req.params.id === req.user.id) {
     try {
@@ -28,6 +30,8 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
+
+
 const getUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id);
@@ -37,6 +41,8 @@ const getUser = async (req, res, next) => {
     next(err);
   }
 };
+
+
 
 const subscribeUser = async (req, res, next) => {
   try {
@@ -54,6 +60,9 @@ const subscribeUser = async (req, res, next) => {
     next(err);
   }
 };
+
+
+
 
 const unSubscribeUser = async (req, res, next) => {
   try {
