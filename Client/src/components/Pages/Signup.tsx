@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import styled from "styled-components";
 import {
   FormContainer,
@@ -47,11 +47,19 @@ const SignUp = () => {
     formState: { errors },
   } = useForm<InputTypes>();
 
+  const password = watch("password", "")
   const [createUser, result] = useUserSignupMutation();
+  const [viewPassword, setViewPassword] =useState<boolean>(false)
+  const [confirmPassword, setConfirmPassword] =useState<boolean>(false)
 
   const onSubmit: SubmitHandler<InputTypes> = (data) => {
       let {channelName, ...others} = data
   channelName = channelName.trim()[0].toUpperCase() + channelName.slice(1)
+  createUser({name : channelName, ...others}).unwrap().then((data: any)=>{
+    console.log(data)
+  } ).catch((err)=>{
+        console.log(err)
+  })
   console.log(channelName)
  
   };
@@ -85,28 +93,45 @@ const SignUp = () => {
           <InputContainer>
             <Label>ChannelName</Label>
 
-            <Input placeholder="SmartRex" {...register("channelName")} />
+            <Input placeholder="SmartRex" {...register("channelName", {
+              required :"Field is required"
+            })} />
           </InputContainer>
           <InputContainer>
             <Label>Email</Label>
 
-            <Input placeholder="JohnDoe@gmail.com" {...register("email")} type="email"/>
+            <Input placeholder="JohnDoe@gmail.com" {...register("email", {
+              required :"Field is required"
+            })} type="email"/>
           </InputContainer>
 
           <InputContainer icon="true">
             <Label>Password</Label>
 
-            <Input placeholder="password" {...register("password")} />
-            <Eyeclose/>
-          </InputContainer>
+            <Input placeholder="password" type={viewPassword ? "text" : "password"} {...register("password", {
+              required :"Field is required",
+              minLength: {
+                value: 5,
+                message: "Password must have at least 8 characters",
 
-          <InputContainer>
+              },
+              
+            })} />
+{           viewPassword ?  <Eyeclose onClick={()=>{setViewPassword(!viewPassword)}}/> : <EyeOpen onClick={()=>{setViewPassword(!viewPassword)}}/>
+}          </InputContainer>
+
+          <InputContainer icon ="true">
             <Label>Confirm password</Label>
 
             <Input
               placeholder="Confirm Password"
-              {...register("confirmPassword")}
+              type={confirmPassword ? "text" : "password"}
+              {...register("confirmPassword", {
+                required :"Field is required",
+                validate: (val) => val === password || "The passwords do not match"
+              })}
             />
+{           confirmPassword ?  <Eyeclose onClick={()=>{setConfirmPassword(!confirmPassword)}}/> : <EyeOpen onClick={()=>{setConfirmPassword(!confirmPassword)}}/>}
           </InputContainer>
           <Terms>
             By creating an account, you agree to our Terms of Service and
