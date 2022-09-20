@@ -96,8 +96,8 @@ const getAVideo = async (req, res, next) => {
 
 const addView = async (req, res, next) => {
   try {
-    await Video.findByIdAndUpdate(req.params.id, { $inc: { views: 1 } });
-
+  const video =  await Video.findOneAndUpdate(req.params.id, { $inc: { views: 1 } });
+console.log(video)
     res.status(200).json({ msg: "View Increased" });
   } catch (err) {
     next(err);
@@ -247,7 +247,7 @@ const getVideosBySearch = async (req, res, next) => {
 
 const likeVideo = async (req, res, next) => {
   const { videoId } = req.params;
-
+console.log(videoId)
   try {
     if (videoId === req.user.id) {
       res.status(403).json("You cant like this video!");
@@ -257,7 +257,7 @@ const likeVideo = async (req, res, next) => {
         $addToSet: { likes: req.user.id },
         $pull: { dislikes: req.user.id },
       });
-      res.status(200).json("You liked this video");
+      res.status(200).json(video);
     }
   } catch (err) {
     next(err);
@@ -277,7 +277,7 @@ const dislikeVideo = async (req, res, next) => {
         $addToSet: { dislikes: req.user.id },
         $pull: { likes: req.user.id },
       });
-      res.status(200).json("You liked this video");
+      res.status(200).json("You liked this video",video);
     }
   } catch (err) {
     next(err);

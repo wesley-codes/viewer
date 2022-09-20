@@ -1,18 +1,12 @@
-import React, { useEffect, useState } from "react";
-import ReactPlayer from "react-player";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { isTemplateExpression } from "typescript";
 import { useGetUserByIDQuery } from "../../services/VideoApi";
 import { Image } from "../../styles/Navbar.styles";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import "react-lazy-load-image-component/src/effects/blur.css";
-
 import {
-  ChannelImg,
   Details,
   DotIcon,
   InfoBox,
-  VideoCard,
   VideoCardContainer,
   VideoThumbnail,
   VideoWrapper,
@@ -21,15 +15,19 @@ import {
 import { ThumbnailData } from "../../Utils/Data";
 import CircleAvatar from "../CircleAvatar/CircleAvatar";
 import Player from "../videoPlayer/Player";
+import "react-lazy-load-image-component/src/effects/blur.css";
+import dayjs from "dayjs";
+
 interface VideoBoxProps {
   id: any;
   imgUrl: string;
   videoUrl: string;
   channelName: string;
   videoName: String;
-  time: string;
+  time: any;
   views: string;
   imgAlt?: string;
+  
 }
 
 interface UserProps {
@@ -52,7 +50,6 @@ const VideoBox = ({
   views,
 }: VideoBoxProps) => {
   const [play, setPlay] = useState(false);
-  const [imgSrc, setImgSrc] = useState();
   let timer: number | NodeJS.Timeout | undefined;
   const { data } = useGetUserByIDQuery(id);
 
@@ -74,7 +71,7 @@ const VideoBox = ({
   return (
     <React.Fragment>
       <VideoCardContainer>
-        <Link to={`video/:${id}`}>
+        <Link to={`video/${id}`}>
           <VideoWrapper
             onMouseEnter={mouseEnterHandler}
             onMouseLeave={mouseLeaveHandler}
@@ -95,7 +92,7 @@ const VideoBox = ({
                 width="100%"
                 height="202px"
                 style={{
-                  objectFit:"cover"
+                  objectFit: "cover",
                 }}
               />
             )}
@@ -105,11 +102,11 @@ const VideoBox = ({
         <Details>
           <p> {videoName.substring(0, 37)}...</p>
           <ViewBox>
-            {views} views <DotIcon /> {time}days ago
+            {views} views <DotIcon /> {time}
           </ViewBox>
           <InfoBox>
             <CircleAvatar height={40} radius={50} width={40}>
-              <Image src={data?.image} />
+              <Image src="https://bit.ly/3eXRRMS" />
             </CircleAvatar>
             <p>{data?.name}</p>
           </InfoBox>

@@ -13,8 +13,20 @@ import {
   Terms,
   BtnContainer,
   CreateBtn,
+  EyeOpen,
+  Eyeclose,
 } from "../../styles/Signup.styles";
+import { useUserSignupMutation } from "../../services/AuthApi";
 import { Link } from "react-router-dom";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+type InputTypes = {
+  channelName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
 const Container = styled.div`
   display: flex;
   background-color: #f6f6f6;
@@ -28,6 +40,22 @@ const Container = styled.div`
   }
 `;
 const SignUp = () => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<InputTypes>();
+
+  const [createUser, result] = useUserSignupMutation();
+
+  const onSubmit: SubmitHandler<InputTypes> = (data) => {
+      let {channelName, ...others} = data
+  channelName = channelName.trim()[0].toUpperCase() + channelName.slice(1)
+  console.log(channelName)
+ 
+  };
+
   return (
     <Container>
       <RightContainer>
@@ -42,7 +70,7 @@ const SignUp = () => {
           <SignUpLogo />
           <LogoName>Viewer</LogoName>
         </IconContainer>
-        <FormContainer>
+        <FormContainer onSubmit={handleSubmit(onSubmit)}>
           <h2>Get Started</h2>
           <p>
             Already having an account?{" "}
@@ -55,26 +83,30 @@ const SignUp = () => {
           </p>
 
           <InputContainer>
-            <Label>Name</Label>
+            <Label>ChannelName</Label>
 
-            <Input placeholder="John Doe"/>
+            <Input placeholder="SmartRex" {...register("channelName")} />
           </InputContainer>
           <InputContainer>
             <Label>Email</Label>
 
-            <Input placeholder="JohnDoe@gmail.com"/>
+            <Input placeholder="JohnDoe@gmail.com" {...register("email")} type="email"/>
           </InputContainer>
 
-          <InputContainer>
+          <InputContainer icon="true">
             <Label>Password</Label>
 
-            <Input placeholder="password"/>
+            <Input placeholder="password" {...register("password")} />
+            <Eyeclose/>
           </InputContainer>
 
           <InputContainer>
             <Label>Confirm password</Label>
 
-            <Input placeholder="Confirm Password"/>
+            <Input
+              placeholder="Confirm Password"
+              {...register("confirmPassword")}
+            />
           </InputContainer>
           <Terms>
             By creating an account, you agree to our Terms of Service and

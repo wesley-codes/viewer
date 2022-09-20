@@ -121,7 +121,9 @@ export const ControlWrapper = styled.div`
   width: 100%;
 `;
 
-export const VideoTitle = styled.span``;
+export const VideoTitle = styled.h2`
+color: #fff
+`;
 export const HomeIcon = styled(HomeSVG)``;
 
 export const TopContainer = styled.div`

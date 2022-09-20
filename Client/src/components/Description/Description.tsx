@@ -5,7 +5,7 @@ import { Article, ArticleSection } from '../../styles/Video.styles';
 
 
 interface DescriptionProps{
-    descp : string
+    descp? : string
 }
 const Description = ({descp}: DescriptionProps) => {
     const [readMore , setReadMore] = useState<boolean>(false)
@@ -14,9 +14,9 @@ const Description = ({descp}: DescriptionProps) => {
   return (
     <ArticleSection>
       <Article>
-      {readMore ?  descp : descp.slice(0, 200) }
+      {readMore ?  descp : descp?.slice(0, 200) }
 {
-    descp.length > 200 && <span style={{color:"#9556cc", cursor:"pointer"}} onClick={toggleReadMore} >{!readMore &&  "...more"}</span>
+    descp?.length! > 200 && <span style={{color:"#9556cc", cursor:"pointer"}} onClick={toggleReadMore} >{!readMore &&  "...more"}</span>
 }
       </Article>
      </ArticleSection>

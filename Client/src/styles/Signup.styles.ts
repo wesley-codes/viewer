@@ -4,6 +4,8 @@ import LogoSVG from "../components/SVG/Logo";
 import { svgStyles } from "./SvgStyles.styles";
 import { css, CSSObject } from "styled-components";
 import { StyledButton } from "./Button.styles";
+import EyeSVG from "../components/SVG/EyeSVG";
+import EyeOffSVG from "../components/SVG/EyeOffSVG";
 
 export const SignUpLogo = styled(LogoSVG)`
   ${(props) =>
@@ -54,17 +56,20 @@ export const LeftContainer = styled.div`
   ${Mobile({ width: "100%" })}
 `;
 
-export const FormContainer = styled.div`
+export const FormContainer = styled.form`
   height: 70vh;
   width: 60vh;
   ${Mobile({ padding: "0 30px", width: "50vh" })}
 `;
 
-export const InputContainer = styled.div`
+export const InputContainer = styled.div<any>`
   display: flex;
   flex-direction: column;
   justify-content: center;
   margin-bottom: 10px;
+
+position :${({icon})=> icon === "true" && "relative" }
+
 `;
 
 export const Label = styled.label`
@@ -108,4 +113,40 @@ font-size: 1rem;
 border:none;
 border-radius: 3px;
 
+`
+
+export const EyeOpen = styled(EyeSVG)`
+${svgStyles({
+    width: "18px",
+    height: "20px",
+    stroke: "#7B2CBF",
+    transition: "transition: all 0.4s ease",
+    textAlign: "center",
+    cursor: "pointer",
+    MozTransition: "all 0.5s ease",
+    msTransition: "all 0.5s ease",
+    position: "absolute",
+    transform: "translate(0%, 0%)",
+    top: "50%",
+    right: "15px"
+  })}
+
+`
+
+
+export const Eyeclose = styled(EyeOffSVG)`
+${svgStyles({
+    width: "18px",
+    height: "20px",
+    stroke: "#7B2CBF",
+    transition: "transition: all 0.4s ease",
+    textAlign: "center",
+    cursor: "pointer",
+    MozTransition: "all 0.5s ease",
+    msTransition: "all 0.5s ease",
+    position: "absolute",
+    transform: "translate(0%, 0%)",
+    top: "50%",
+    right: "15px"
+  })}
 `

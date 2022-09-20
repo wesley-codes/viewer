@@ -32,6 +32,11 @@ const Player = forwardRef(
   ) => {
     return (
       <ReactPlayer
+      style={{
+        width:"100%",
+        maxHeight:"720px"
+
+      }}
         ref={ref as React.MutableRefObject<any>}
         onMouseLeave ={onMouseLeave}
         width={width}
@@ -42,13 +47,13 @@ const Player = forwardRef(
         url={url}
         playbackRate={playbackRate}
         onProgress={onProgress}
-        config={{
-          file: {
-            attributes: {
-              crossOrigin: "anonymous",
-            },
-          },
-        }}
+        // config={{
+        //   file: {
+        //     attributes: {
+        //       crossOrigin: "anonymous",
+        //     },
+        //   },
+        // }}
       />
     );
   }

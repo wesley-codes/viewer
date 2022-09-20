@@ -46,7 +46,7 @@ import Description from "../Description/Description";
 import { Sort } from "@material-ui/icons";
 import Comment_LG from "../Comments/Comment_LG";
 import Comment_SM from "../Comments/Comment_SM";
-
+import {useGetVideoByIDQuery, useLikeVideoMutation} from "../../services/VideoApi"
 interface controlStateProps {
   playing: boolean;
   muted: boolean;
@@ -63,8 +63,10 @@ type BookmarkProps = {
 };
 let count = 0;
 const VideoDetails = () => {
-  const { id: videoTitle } = useParams();
-  console.log(videoTitle);
+  const { id:videoID } = useParams();
+  const [likevideo , {isSuccess}] = useLikeVideoMutation()
+  const {data:video, error, isLoading , isFetching} = useGetVideoByIDQuery(videoID!)
+  
 
   const playerRef = useRef<any>(null);
   const canvasRef = useRef<any>(null);
@@ -256,9 +258,13 @@ const VideoDetails = () => {
     setShowComment(true);
 
     //if modal is true && 
-   
-  
   };
+
+
+const likevideoHandler = async()=> {
+  await likevideo(video?._id!).unwrap()
+}
+
 
 
   return (
@@ -272,6 +278,7 @@ const VideoDetails = () => {
               ref={playerContainerRef}
               onMouseMove={mouseMoveHandler}
             >
+            
               <Player
                 ref={playerRef}
                 width="100%"
@@ -280,7 +287,7 @@ const VideoDetails = () => {
                 // controls
                 playing={playing}
                 volume={volume}
-                url="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+                url={video?.video!}
                 playbackRate={playbackRate}
                 onProgress={progressHandler}
               />
@@ -307,6 +314,7 @@ const VideoDetails = () => {
                 duration={totalDuration}
                 onChangeDisplayFormat={changeDisplayFormatHandler}
                 onAddBookmark={addBookmarkHandler}
+                videoTitle = {video?.title!}
               />
             </VideoContainer>
 
@@ -332,7 +340,7 @@ const VideoDetails = () => {
               {/* <Canvas ref={canvasRef} /> */}
             </BookmarkContainer>
             <DescpSection>
-              <VideoDescpTitle> {videoTitle}.</VideoDescpTitle>
+              <VideoDescpTitle> {video?.title}.</VideoDescpTitle>
               <ActionContainer>
                 <UserAction>
                   <AvatarContainer>
@@ -359,8 +367,9 @@ const VideoDetails = () => {
                       height={20}
                       stroke="#9556cc"
                       fill="#9556cc"
+                      onClick={likevideoHandler}
                     />
-                    <IconLabel>336</IconLabel>
+                    <IconLabel>{video?.likes.length}</IconLabel>
                   </IconBox>
 
                   <IconBox>
@@ -406,8 +415,7 @@ const VideoDetails = () => {
               </ActionContainer>
 
               <Description
-                descp="Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus excepturi ipsam temporibus consequuntur autem, odio quaerat? Tenetur impedit quasi in amet, cum neque ex ipsum vero deleniti! Maiores, aliquam hic.              Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem quis aliquid neque obcaecati nemo dolore possimus. Fuga labore incidunt suscipit dolores facilis consequuntur, quia sunt, repellat eveniet natus non quisquam?
-"
+                descp={video?.description!}
               />
               <CommentWrapper>
               

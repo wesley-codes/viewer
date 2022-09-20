@@ -136,6 +136,7 @@ interface PlayerControlProps {
   played: number;
   ellapsedTime: string;
   duration: string;
+  videoTitle:string;
   playbackRate: number;
   onRewind: () => void;
   onPlayPause: () => void;
@@ -174,6 +175,7 @@ const PlayerControls = forwardRef(
       duration,
       onChangeDisplayFormat,
       onAddBookmark,
+      videoTitle
     }: PlayerControlProps, ref ) => {
     const classes = useStyles();
 
@@ -195,7 +197,7 @@ const PlayerControls = forwardRef(
     return (
       <ControlWrapper ref={ref as React.RefObject<HTMLDivElement>}>
         <TopContainer>
-          <VideoTitle>Video Title</VideoTitle>
+          <VideoTitle>{videoTitle}</VideoTitle>
           <IconButton
             onClick={onAddBookmark}
             className={`${classes.bottomIcons}`}
