@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import {
   FormContainer,
@@ -15,10 +15,13 @@ import {
   CreateBtn,
   EyeOpen,
   Eyeclose,
+  ErrorMessage,
+  ErrorContainer,
 } from "../../styles/Signup.styles";
 import { useUserSignupMutation } from "../../services/AuthApi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { FlashOffOutlined } from "@material-ui/icons";
 
 type InputTypes = {
   channelName: string;
@@ -26,6 +29,13 @@ type InputTypes = {
   password: string;
   confirmPassword: string;
 };
+
+
+type ErrorType = {
+  success : boolean
+  status: number
+  errMessage: string
+}
 
 const Container = styled.div`
   display: flex;
@@ -40,6 +50,8 @@ const Container = styled.div`
   }
 `;
 const SignUp = () => {
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -47,22 +59,33 @@ const SignUp = () => {
     formState: { errors },
   } = useForm<InputTypes>();
 
-  const password = watch("password", "")
-  const [createUser, result] = useUserSignupMutation();
-  const [viewPassword, setViewPassword] =useState<boolean>(false)
-  const [confirmPassword, setConfirmPassword] =useState<boolean>(false)
-
+  const password = watch("password", "");
+  const [createUser, {error}] = useUserSignupMutation();
+  const [viewPassword, setViewPassword] = useState<boolean>(false);
+  const [confirmPassword, setConfirmPassword] = useState<boolean>(false);
+const [errorMessage , setErrorMessage] = useState({
+  errMsg :"",
+  success : false
+})
   const onSubmit: SubmitHandler<InputTypes> = (data) => {
-      let {channelName, ...others} = data
-  channelName = channelName.trim()[0].toUpperCase() + channelName.slice(1)
-  createUser({name : channelName, ...others}).unwrap().then((data: any)=>{
-    console.log(data)
-  } ).catch((err)=>{
-        console.log(err)
-  })
-  console.log(channelName)
- 
+    let { channelName, email, ...others } = data;
+   email = email.trim()[0].toUpperCase() + email.slice(1);
+
+    channelName = channelName.trim()[0].toUpperCase() + channelName.slice(1);
+    createUser({ name: channelName, email:email, ...others })
+      .unwrap()
+      .then((data) => {
+        navigate(`/signin`);
+      })
+      .catch((err) => {
+        const {data} = err
+        console.log({success: data.success, errMsg:data.errMessage});
+        setErrorMessage({success: data.success, errMsg:data.errMessage})
+      });
+    console.log(channelName);
+
   };
+        //  console.log("error comming from rtk",error)
 
   return (
     <Container>
@@ -93,54 +116,117 @@ const SignUp = () => {
           <InputContainer>
             <Label>ChannelName</Label>
 
-            <Input placeholder="SmartRex" {...register("channelName", {
-              required :"Field is required"
-            })} />
+            <Input
+              placeholder="SmartRex"
+              {...register("channelName", {
+                required: "Field is required",
+              })}
+            />
           </InputContainer>
+          <ErrorContainer>
+            {errors.channelName && (
+              <ErrorMessage>{errors.channelName.message}</ErrorMessage>
+            )}
+          </ErrorContainer>
           <InputContainer>
             <Label>Email</Label>
 
-            <Input placeholder="JohnDoe@gmail.com" {...register("email", {
-              required :"Field is required"
-            })} type="email"/>
+            <Input
+              placeholder="JohnDoe@gmail.com"
+              {...register("email", {
+                required: "Field is required",
+              })}
+              type="email"
+            />
           </InputContainer>
-
+          <ErrorContainer>
+            {" "}
+            {errors.email && (
+              <ErrorMessage>{errors.email.message}</ErrorMessage>
+            )}
+          </ErrorContainer>
           <InputContainer icon="true">
             <Label>Password</Label>
+            <Input
+              placeholder="password"
+              type={viewPassword ? "text" : "password"}
+              {...register("password", {
+                required: "Field is required",
+                minLength: {
+                  value: 5,
+                  message: "Password must have at least 8 characters",
+                },
+              })}
+            />
+            {viewPassword ? (
+              <Eyeclose
+                onClick={() => {
+                  setViewPassword(!viewPassword);
+                }}
+              />
+            ) : (
+              <EyeOpen
+                onClick={() => {
+                  setViewPassword(!viewPassword);
+                }}
+              />
+            )}{" "}
+          </InputContainer>
 
-            <Input placeholder="password" type={viewPassword ? "text" : "password"} {...register("password", {
-              required :"Field is required",
-              minLength: {
-                value: 5,
-                message: "Password must have at least 8 characters",
+          <ErrorContainer>
+            {errors.password && (
+              <ErrorMessage>{errors.password.message}</ErrorMessage>
+            )}
+          </ErrorContainer>
 
-              },
-              
-            })} />
-{           viewPassword ?  <Eyeclose onClick={()=>{setViewPassword(!viewPassword)}}/> : <EyeOpen onClick={()=>{setViewPassword(!viewPassword)}}/>
-}          </InputContainer>
-
-          <InputContainer icon ="true">
+          <InputContainer icon="true">
             <Label>Confirm password</Label>
 
             <Input
               placeholder="Confirm Password"
               type={confirmPassword ? "text" : "password"}
               {...register("confirmPassword", {
-                required :"Field is required",
-                validate: (val) => val === password || "The passwords do not match"
+                required: "Field is required",
+                validate: (val) =>
+                  val === password || "The passwords do not match",
               })}
             />
-{           confirmPassword ?  <Eyeclose onClick={()=>{setConfirmPassword(!confirmPassword)}}/> : <EyeOpen onClick={()=>{setConfirmPassword(!confirmPassword)}}/>}
+            {confirmPassword ? (
+              <Eyeclose
+                onClick={() => {
+                  setConfirmPassword(!confirmPassword);
+                }}
+              />
+            ) : (
+              <EyeOpen
+                onClick={() => {
+                  setConfirmPassword(!confirmPassword);
+                }}
+              />
+            )}
           </InputContainer>
+          <ErrorContainer>
+            {errors.confirmPassword && (
+              <ErrorMessage>{errors.confirmPassword.message}</ErrorMessage>
+            )}
+          </ErrorContainer>
           <Terms>
             By creating an account, you agree to our Terms of Service and
             Privacy Policy.
           </Terms>
           <BtnContainer>
-            <CreateBtn>Create account</CreateBtn>
+            <CreateBtn>Create Account</CreateBtn>
+            
           </BtnContainer>
+
+
+          <ErrorContainer msg="errMsg">
+            {!errorMessage.success && (
+              <ErrorMessage msg="errMsg">{errorMessage.errMsg}</ErrorMessage>
+            )}
+          </ErrorContainer>
         </FormContainer>
+        
       </LeftContainer>
     </Container>
   );

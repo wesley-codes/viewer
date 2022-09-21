@@ -23,7 +23,8 @@ const login = async (req, res, next) => {
     const user = await User.findOne({ email: req.body.email });
     !user && next(createError(404, "User doesn't exist")); //USER DOES NOT EXIST
     const isCorrect = await bcrypt.compare(req.body.password, user.password); //CHECK IF PASSWORD AND HASED PASSWORD ARE THE SAME
-    !isCorrect && next(createError(400, "Wrong credentials!"));
+    console.log("=======",isCorrect)
+   if (!isCorrect) return next(createError(400, "Wrong credentials!"));
     const token = JWT.sign(
       {
         id: user._id,

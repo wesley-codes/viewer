@@ -40,7 +40,7 @@ export const RightContainer = styled.div`
   padding: 20px;
   height: 100vh;
   width: 50%;
- 
+
   ${Tablet({ display: "none" })}
   ${Mobile({ display: "none" })}
 `;
@@ -58,6 +58,7 @@ export const LeftContainer = styled.div`
 
 export const FormContainer = styled.form`
   height: 70vh;
+
   width: 60vh;
   ${Mobile({ padding: "0 30px", width: "50vh" })}
 `;
@@ -68,8 +69,7 @@ export const InputContainer = styled.div<any>`
   justify-content: center;
   margin-bottom: 10px;
 
-position :${({icon})=> icon === "true" && "relative" }
-
+  position: ${({ icon }) => icon === "true" && "relative"};
 `;
 
 export const Label = styled.label`
@@ -99,24 +99,22 @@ export const Terms = styled.p`
   padding: 0;
 `;
 
-
 export const BtnContainer = styled.div`
-margin-top: 10px;
-`
+  margin-top: 10px;
+`;
 
 export const CreateBtn = styled(StyledButton)`
-padding:8px;
-background-color:#7b2cbf ;
-color: #fff;
-font-weight: 600;
-font-size: 1rem;
-border:none;
-border-radius: 3px;
-
-`
+  padding: 8px;
+  background-color: #7b2cbf;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  border-radius: 3px;
+`;
 
 export const EyeOpen = styled(EyeSVG)`
-${svgStyles({
+  ${svgStyles({
     width: "18px",
     height: "20px",
     stroke: "#7B2CBF",
@@ -128,14 +126,12 @@ ${svgStyles({
     position: "absolute",
     transform: "translate(0%, 0%)",
     top: "50%",
-    right: "15px"
+    right: "15px",
   })}
-
-`
-
+`;
 
 export const Eyeclose = styled(EyeOffSVG)`
-${svgStyles({
+  ${svgStyles({
     width: "18px",
     height: "20px",
     stroke: "#7B2CBF",
@@ -147,6 +143,19 @@ ${svgStyles({
     position: "absolute",
     transform: "translate(0%, 0%)",
     top: "50%",
-    right: "15px"
+    right: "15px",
   })}
-`
+`;
+
+export const ErrorContainer = styled.div<any>`
+  display: flex;
+  justify-content:flex-start;
+  align-self: ${({msg})=> msg === "errMsg" && "center"} 
+`;
+
+export const ErrorMessage = styled.p<any>`
+  color: red;
+  font-size: ${({msg})=> msg === "errMsg" ? "0.9rem" : "0.7rem"} ;
+  margin-top: ${({msg})=> msg === "errMsg" ? "5px" : "0"} ;
+  font-weight: 500;
+`;

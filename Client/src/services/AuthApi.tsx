@@ -6,6 +6,16 @@ type CreateUserTypes = {
   password: string;
 };
 
+type LoginUserTypes = {
+  _id: string;
+  name: string;
+  email: string;
+  img: string;
+  subscribers: number;
+  subscribedUsers: string[];
+  token: string;
+};
+
 export const authapi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
@@ -20,7 +30,17 @@ export const authapi = createApi({
         body: user,
       }),
     }),
+    userSignin: builder.mutation<
+      LoginUserTypes,
+      { email: string; password: string }
+    >({
+      query: (user) => ({
+        url: "/login",
+        method: "POST",
+        body: user,
+      }),
+    }),
   }),
 });
 
-export const { useUserSignupMutation } = authapi;
+export const { useUserSignupMutation, useUserSigninMutation } = authapi;
