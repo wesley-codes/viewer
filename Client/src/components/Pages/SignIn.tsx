@@ -18,7 +18,7 @@ import {
   Eyeclose,
   EyeOpen,
 } from "../../styles/Signup.styles";
-import { Link } from "react-router-dom";
+import { Link , useNavigate} from "react-router-dom";
 import { useUserSigninMutation } from "../../services/AuthApi";
 import { useForm, SubmitHandler } from "react-hook-form";
 
@@ -40,8 +40,24 @@ type InputTypes = {
   password: string;
 };
 
+
+type UserTypes ={
+_id: string;
+name: string;
+email: string
+img: string
+subscribers: number
+token?: string
+subscribedUsers:string[]
+
+}
+
+
+
 const SignIn = () => {
+  const navigate = useNavigate()
   const [loginUser, result] = useUserSigninMutation()
+  const [user , setUser] = useState<UserTypes>()
   const [viewPassword, setViewPassword] = useState<boolean>(false);
   const [errorMessage , setErrorMessage] = useState({
     errMsg :"",
@@ -60,9 +76,15 @@ const SignIn = () => {
     let {  email , password} = data;
     email = email.trim()[0].toUpperCase() + email.slice(1);
 
- loginUser({email, password:data.password}).unwrap().then((data:any)=>{
-  console.log(data)
- }).catch((err)=>{
+ loginUser({email, password:data.password}).unwrap().then((data: any)=>{
+ const {token , ...other} = data
+setUser(other)
+//store user in local storage 
+localStorage.setItem('user', JSON.stringify(other))
+navigate("/")
+
+
+}).catch((err)=>{
   const {data} = err
   setErrorMessage({success:data.success, errMsg:data.errMessage})
  })
