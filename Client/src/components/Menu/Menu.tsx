@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { TypedUseSelectorHook, useSelector } from "react-redux";
+import { useNavigate} from "react-router-dom";
+import { RootState } from "../../services/store";
 import {
   HomeIcon,
   LogoDetails,
@@ -18,9 +20,6 @@ import {
   TitleHeading,
   ProfileDetail,
   ProfileItem,
-  JobContainer,
-  NameBox,
-  Occupation,
   LogoutIcon,
   StyledLink,
 } from "../../styles/Menu.styles";
@@ -31,7 +30,16 @@ interface MenuProps {
 }
 
 const Menu = () => {
+  const navigate = useNavigate()
+  const useAppSelector:TypedUseSelectorHook<RootState> =useSelector
+const {loggedIn} = useAppSelector((state) => state.User)
   const [active, setActive] = useState(false);
+
+  const logout =()=>{
+    localStorage.clear()
+    navigate("/signin")
+  }
+  console.log(loggedIn)
 
   return (
     <SideBar active={+active}>
@@ -79,14 +87,13 @@ const Menu = () => {
         <MenuItem active={active} title="My videos" tooltip="My videos">
           <VideoIcon />
         </MenuItem>
-        <ProfileItem active={+active}>
+      <ProfileItem active={+active} onClick={logout} style={{display: loggedIn ? "block" : "none"}}>
           <ProfileDetail>
-            <JobContainer active={+active}>
-              <NameBox>Eze Nnaemeka</NameBox>
-              <Occupation>Web Designer</Occupation>
-            </JobContainer>
+          <MenuItem active={active} title="Logout" tooltip="Logout">
+           <LogoutIcon />    
+               </MenuItem>
           </ProfileDetail>
-          <LogoutIcon />
+          
         </ProfileItem>
       </NavList>
     </SideBar>

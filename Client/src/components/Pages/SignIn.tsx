@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import {
   FormContainer,
@@ -18,10 +18,12 @@ import {
   Eyeclose,
   EyeOpen,
 } from "../../styles/Signup.styles";
-import { Link , useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useUserSigninMutation } from "../../services/AuthApi";
 import { useForm, SubmitHandler } from "react-hook-form";
-
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "../../services/store";
+import { userLoggedIn } from "../../Features/UserSlice";
 const Container = styled.div`
   display: flex;
   background-color: #f6f6f6;
@@ -40,54 +42,57 @@ type InputTypes = {
   password: string;
 };
 
-
-type UserTypes ={
-_id: string;
-name: string;
-email: string
-img: string
-subscribers: number
-token?: string
-subscribedUsers:string[]
-
-}
-
-
+type UserTypes = {
+  _id: string;
+  name: string;
+  email: string;
+  img: string;
+  subscribers: number;
+  token?: string;
+  subscribedUsers: string[];
+};
 
 const SignIn = () => {
-  const navigate = useNavigate()
-  const [loginUser, result] = useUserSigninMutation()
-  const [user , setUser] = useState<UserTypes>()
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+  const [loginUser, result] = useUserSigninMutation();
+  const [user, setUser] = useState<UserTypes>();
   const [viewPassword, setViewPassword] = useState<boolean>(false);
-  const [errorMessage , setErrorMessage] = useState({
-    errMsg :"",
-    success : false
-  })
+  const [errorMessage, setErrorMessage] = useState({
+    errMsg: "",
+    success: false,
+  });
+
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<InputTypes>();
 
+    useEffect(()=>{
+  localStorage.clear()
+  
 
+    },[])
 
   const onSubmit: SubmitHandler<InputTypes> = (data) => {
-    let {  email , password} = data;
+    let { email, password } = data;
     email = email.trim()[0].toUpperCase() + email.slice(1);
 
- loginUser({email, password:data.password}).unwrap().then((data: any)=>{
- const {token , ...other} = data
-setUser(other)
-//store user in local storage 
-localStorage.setItem('user', JSON.stringify(other))
-navigate("/")
-
-
-}).catch((err)=>{
-  const {data} = err
-  setErrorMessage({success:data.success, errMsg:data.errMessage})
- })
+    loginUser({ email, password: data.password })
+      .unwrap()
+      .then((data: any) => {
+        const { token, ...other } = data;
+        // setUser(other);
+        dispatch(userLoggedIn(other))
+        //store user in local storage
+        localStorage.setItem("user", JSON.stringify(other));
+        navigate("/");
+      })
+      .catch((err) => {
+        const { data } = err;
+        setErrorMessage({ success: data.success, errMsg: data.errMessage });
+      });
   };
 
   return (
@@ -138,7 +143,6 @@ navigate("/")
 
           <InputContainer icon="true">
             <Label>Password</Label>
-
             <Input
               placeholder="password"
               type={viewPassword ? "text" : "password"}
@@ -172,7 +176,7 @@ navigate("/")
           <BtnContainer>
             <CreateBtn>Login</CreateBtn>
           </BtnContainer>
-          
+
           <ErrorContainer msg="errMsg">
             {!errorMessage.success && (
               <ErrorMessage msg="errMsg">{errorMessage.errMsg}</ErrorMessage>

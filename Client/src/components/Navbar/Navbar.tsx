@@ -1,5 +1,7 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React,{useEffect} from "react";
+import { useSelector, TypedUseSelectorHook } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { RootState, store } from "../../services/store";
 import {
   Badge,
   BellIcon,
@@ -13,6 +15,7 @@ import {
   ProfileBox,
   SearchIcon,
   SecondContainer,
+  Signin,
   StyledInput,
   StyledNav,
 } from "../../styles/Navbar.styles";
@@ -23,6 +26,15 @@ interface NavProps {
 }
 
 const Navbar = ({ sm }: NavProps) => {
+  const navigate = useNavigate()
+const useAppSelector:TypedUseSelectorHook<RootState> =useSelector
+const {loggedIn} = useAppSelector((state) => state.User)
+  const gotosignIn = ()=>{
+    navigate("/signin")
+  }
+
+ 
+
   return (
     <StyledNav sm={+sm!}>
       <Container>
@@ -39,6 +51,7 @@ const Navbar = ({ sm }: NavProps) => {
           </Inputcontainer>
         </FirstContainer>
         <SecondContainer>
+     <Signin onClick={gotosignIn} style={{display : loggedIn ? "none" :"block"}}>Signin</Signin>
           <NotificationBox>
             <Badge>5</Badge>
             <BellIcon />

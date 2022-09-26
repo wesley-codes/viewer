@@ -48,12 +48,13 @@ export const videoApi = createApi({
   endpoints: (builder) => ({
     getRandomVideo: builder.query<RandomVideoTypes[], void>({
       query: () => "video/ran", // endpoint
+      providesTags:["Video"]
     }),
-    getUserByID: builder.query<GetUserID, string>({
-      query: (id) => `user/find/${id}`,
-    }),
+    
     getVideoByID: builder.query<GetVideoID, string>({
       query: (videoId) => `video/${videoId}`,
+      providesTags:["Video"]
+
     }),
     likeVideo: builder.mutation<GetVideoID, string>({
       query: (id) => ({
@@ -72,7 +73,6 @@ export const videoApi = createApi({
 //auto generated hook
 export const {
   useGetRandomVideoQuery,
-  useGetUserByIDQuery,
   useGetVideoByIDQuery,
   useLikeVideoMutation
 } = videoApi;

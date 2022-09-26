@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useGetUserByIDQuery } from "../../services/VideoApi";
 import { Image } from "../../styles/Navbar.styles";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
@@ -16,8 +15,8 @@ import { ThumbnailData } from "../../Utils/Data";
 import CircleAvatar from "../CircleAvatar/CircleAvatar";
 import Player from "../videoPlayer/Player";
 import "react-lazy-load-image-component/src/effects/blur.css";
-import dayjs from "dayjs";
-
+import {useGetUserByIDQuery} from "../../services/UserApi"
+import { useGetVideoByIDQuery } from "../../services/VideoApi";
 interface VideoBoxProps {
   id: any;
   imgUrl: string;
@@ -50,10 +49,12 @@ const VideoBox = ({
   views,
 }: VideoBoxProps) => {
   const [play, setPlay] = useState(false);
-  let timer: number | NodeJS.Timeout | undefined;
-  const { data } = useGetUserByIDQuery(id);
 
-  console.log(data);
+  let timer: number | NodeJS.Timeout | undefined;
+  //const {data}  = useGetVideoByIDQuery(id)
+   const { data:user } = useGetUserByIDQuery(channelName);
+
+   console.log("===",user);
   //http://localhost:5000/api/v1/user/find
 
   const mouseEnterHandler = () => {
@@ -68,6 +69,7 @@ const VideoBox = ({
     setPlay(false);
   };
 
+ 
   return (
     <React.Fragment>
       <VideoCardContainer>
@@ -85,7 +87,8 @@ const VideoBox = ({
                 url="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
               ></Player>
             ) : (
-              <LazyLoadImage
+              <div>
+                <LazyLoadImage
                 src={imgUrl}
                 onMouseLeave={mouseLeaveHandler}
                 effect="blur"
@@ -95,6 +98,8 @@ const VideoBox = ({
                   objectFit: "cover",
                 }}
               />
+              </div>
+
             )}
           </VideoWrapper>
         </Link>
@@ -108,7 +113,7 @@ const VideoBox = ({
             <CircleAvatar height={40} radius={50} width={40}>
               <Image src="https://bit.ly/3eXRRMS" />
             </CircleAvatar>
-            <p>{data?.name}</p>
+            <p>{user?.name}</p>
           </InfoBox>
         </Details>
       </VideoCardContainer>

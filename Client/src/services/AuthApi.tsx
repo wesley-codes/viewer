@@ -16,7 +16,7 @@ type LoginUserTypes = {
   token: string;
 };
 
-export const authapi = createApi({
+export const AuthApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:5000/api/v1/auth",
@@ -43,4 +43,4 @@ export const authapi = createApi({
   }),
 });
 
-export const { useUserSignupMutation, useUserSigninMutation } = authapi;
+export const { useUserSignupMutation, useUserSigninMutation } = AuthApi;

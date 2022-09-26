@@ -5,7 +5,7 @@ import { ThumbnailData } from "../../Utils/Data";
 import Menu from "../Menu/Menu";
 import Navbar from "../Navbar/Navbar";
 import { HomeContainer, HomeWrapper } from "../../styles/GlobalStyles.styles";
-import { useGetRandomVideoQuery, useGetUserByIDQuery } from "../../services/VideoApi";
+import { useGetRandomVideoQuery } from "../../services/VideoApi";
 import Loader from "../Loader/Loader";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -18,7 +18,7 @@ const Home = () => {
 
 const date = dayjs("2022-09-12T10:07:35.087Z").fromNow()
 
-console.log(RandonVideos)
+//console.log(RandonVideos)
 
   return (
     <React.Fragment>
@@ -37,7 +37,7 @@ console.log(RandonVideos)
               id={item.videoId}
               imgUrl={item.thumbnail}
               videoUrl={item.url}
-              channelName={item.title}
+              channelName={item.userId}
               videoName={item.title}
               views={item.views}
               imgAlt = {item.title}

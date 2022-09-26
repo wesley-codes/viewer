@@ -135,8 +135,8 @@ export const AddVideoBtn = styled.button`
 `;
 
 export const NotificationBox = styled.div`
-  width: 45px;
-  height: 45px;
+  width: 30px;
+  height: 30px;
   background: ${({ theme }) => theme.notificationBg};
   border-radius: 8px;
   display: flex;
@@ -160,8 +160,8 @@ export const BellIcon = styled(BellSVG)`
 `;
 
 export const Badge = styled.div`
-  width: 20px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
   border-radius: 50px;
   background-color: ${({ theme }) => theme.badge};
   color: ${({ theme }) => theme.btnBg};
@@ -194,3 +194,10 @@ export const Image = styled.img`
   object-fit:cover;
   border-radius: 50px
 `;
+
+export const Signin = styled.p `
+color : ${({theme})=> theme.text};
+font-size: 1rem;
+font-weight: 800;
+cursor: pointer;
+`

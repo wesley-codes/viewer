@@ -23,6 +23,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { FlashOffOutlined } from "@material-ui/icons";
 
+
+
 type InputTypes = {
   channelName: string;
   email: string;
@@ -52,6 +54,7 @@ const Container = styled.div`
 const SignUp = () => {
   const navigate = useNavigate();
 
+
   const {
     register,
     handleSubmit,
@@ -67,6 +70,8 @@ const [errorMessage , setErrorMessage] = useState({
   errMsg :"",
   success : false
 })
+ 
+
   const onSubmit: SubmitHandler<InputTypes> = (data) => {
     let { channelName, email, ...others } = data;
    email = email.trim()[0].toUpperCase() + email.slice(1);
@@ -74,7 +79,7 @@ const [errorMessage , setErrorMessage] = useState({
     channelName = channelName.trim()[0].toUpperCase() + channelName.slice(1);
     createUser({ name: channelName, email:email, ...others })
       .unwrap()
-      .then((data) => {
+      .then((data:any) => {
         navigate(`/signin`);
       })
       .catch((err) => {

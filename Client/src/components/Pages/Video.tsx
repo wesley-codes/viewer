@@ -47,6 +47,7 @@ import { Sort } from "@material-ui/icons";
 import Comment_LG from "../Comments/Comment_LG";
 import Comment_SM from "../Comments/Comment_SM";
 import {useGetVideoByIDQuery, useLikeVideoMutation} from "../../services/VideoApi"
+import { useGetUserByIDQuery } from "../../services/UserApi";
 interface controlStateProps {
   playing: boolean;
   muted: boolean;
@@ -66,7 +67,9 @@ const VideoDetails = () => {
   const { id:videoID } = useParams();
   const [likevideo , {isSuccess}] = useLikeVideoMutation()
   const {data:video, error, isLoading , isFetching} = useGetVideoByIDQuery(videoID!)
-  
+const {data:user} = useGetUserByIDQuery(video?.userId!)
+  console.log(user)
+
 
   const playerRef = useRef<any>(null);
   const canvasRef = useRef<any>(null);
@@ -354,8 +357,8 @@ const likevideoHandler = async()=> {
                         marginLeft: "10px",
                       }}
                     >
-                      <span style={{ fontWeight: "700" }}>Vivek Joy</span>
-                      <span>538 subscribers</span>
+                      <span style={{ fontWeight: "700" }}>{user?.name}</span>
+                      <span>{user?.subscribers} subscribers</span>
                     </div>
                   </AvatarContainer>
                   <SubscribeBtn radius={5}>SUBSCRIBE</SubscribeBtn>
