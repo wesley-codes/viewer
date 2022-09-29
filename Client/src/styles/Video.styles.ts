@@ -1,11 +1,37 @@
-import { StyledButton } from './Button.styles';
+import { StyledButton } from "./Button.styles";
 import ReactPlayer from "react-player";
 import { Mobile, Tablet } from "./../Utils/respsonsive";
-import styled from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 import DotSVG from "../components/SVG/Dot";
 import HomeSVG from "../components/SVG/Home";
-import Button from "../components/Button/Button";
-import LikeSVG from '../components/SVG/Like';
+import LikeSVG from "../components/SVG/Like";
+
+const heartbeat = keyframes`
+  0%
+  {
+    transform: scale( .75 );
+  }
+  20%
+  {
+    transform: scale( 3 );
+  }
+  40%
+  {
+    transform: scale( 3 );
+  }
+  60%
+  {
+    transform: scale( 5 );
+  }
+  80%
+  {
+    transform: scale(5 );
+  }
+  100%
+  {
+    transform: scale( .75 );
+  }
+`;
 
 export const Container = styled.div`
   border: 2px soild red;
@@ -68,10 +94,9 @@ export const VideoDetail = styled.div`
 `;
 
 export const VideoName = styled.p<any>`
-  margin: 0 ${({title})=> title ? "0px" : "8px"};
+  margin: 0 ${({ title }) => (title ? "0px" : "8px")};
   color: ${({ theme }) => theme.text};
   font-weight: 500;
-  
 `;
 
 export const Duration = styled.div`
@@ -106,7 +131,7 @@ export const DotIcon = styled(DotSVG)`
 
 //==========================
 
-export const ControlWrapper = styled.div`
+export const ControlWrapper = styled.div<any>`
   position: absolute;
   top: 0;
   bottom: 0;
@@ -117,12 +142,13 @@ export const ControlWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
-  width: 100%;
+display : ${({buffer}) => buffer && "none"};
+ 
 `;
 
 export const VideoTitle = styled.h2`
-color: #fff
+  color: #fff;
+  margin: 5px
 `;
 export const HomeIcon = styled(HomeSVG)``;
 
@@ -130,7 +156,7 @@ export const TopContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 10px 20px;
+  margin: 5px 20px;
 `;
 
 export const MiddleContainer = styled.div`
@@ -183,66 +209,62 @@ export const BookmarkContainer = styled.div`
   ${Mobile({ display: "none" })}
 `;
 
-
-
 export const DescpSection = styled.section`
   padding: 0 15px;
   position: sticky;
-  top:10px
+  top: 10px;
 `;
 
 export const VideoDescpTitle = styled.h2`
-  color: ${({theme})=> theme.text}
+  color: ${({ theme }) => theme.text};
 `;
 
 export const ActionContainer = styled.div`
   display: flex;
-  ${Tablet({flexDirection:"column-reverse"})}
+  ${Tablet({ flexDirection: "column-reverse" })}
 
-  ${Mobile({flexDirection:"column-reverse"})}
+  ${Mobile({ flexDirection: "column-reverse" })}
 `;
 
 export const AvatarContainer = styled.div`
   display: flex;
   align-items: center;
 
-  &, span{
+  &,
+  span {
     font-size: small;
-    color: ${({theme})=> theme.text}
+    color: ${({ theme }) => theme.text};
   }
 `;
 
-
 export const AvatarImg = styled.img`
-  width: 50px;height:50px;
+  width: 50px;
+  height: 50px;
   border-radius: 50px;
   object-fit: cover;
 `;
 
 export const UserAction = styled.div`
-  flex:1;
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding-right: 20px;
-  ${Mobile({marginTop: "10px", paddingRight:"0"})}
-
+  ${Mobile({ marginTop: "10px", paddingRight: "0" })}
 `;
-
 
 export const SubscribeBtn = styled(StyledButton)`
   padding: 8px 10px;
   border: none;
-  background-color: ${({theme})=> theme.background};
+  background-color: ${({ theme }) => theme.background};
   cursor: pointer;
 `;
 
-
 export const ActionBox = styled.div`
-  flex:1;
-display: flex;
-align-items: center;
-justify-content: space-between;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 export const IconBox = styled.div`
@@ -252,36 +274,35 @@ export const IconBox = styled.div`
   cursor: pointer;
 `;
 
-export const LikeIcon = styled(LikeSVG)`
-fill: #fff
-`
+export const LikeIcon = styled(LikeSVG)<any>`
+  width: 20px;
+  height: 20px;
+  stroke: #9556cc;
+  fill: ${({ active }) => (active ? "#9556cc" : "#fff")};
+  & :active {
+    animation: ${heartbeat} 5s infinite;
+  }
+`;
 
 export const IconLabel = styled.span`
-color: ${({theme})=> theme.text};
-font-weight: 800;
-font-size: 12px;
-margin-left: 5px;
-${Tablet({display:"none"})};
+  color: ${({ theme }) => theme.text};
+  font-weight: 800;
+  font-size: 12px;
+  margin-left: 5px;
+  ${Tablet({ display: "none" })};
 
-${Mobile({display:"none"})}
-
-`
-
+  ${Mobile({ display: "none" })}
+`;
 
 export const ArticleSection = styled.div`
-margin: 10px 0;
-
-`
-
+  margin: 10px 0;
+`;
 
 export const Article = styled.article`
-font-weight: 600;
-font-size: 0.9rem;
-color: ${({theme})=> theme.text};
-
-`
-
-
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: ${({ theme }) => theme.text};
+`;
 
 export const CommentWrapper = styled.div`
   display: flex;
@@ -292,27 +313,20 @@ export const CommentWrapper = styled.div`
   position: relative;
 `;
 
-export const CommentBox = styled.div`
-
-
-
-
-`;
-
-
+export const CommentBox = styled.div``;
 
 export const SortSelect = styled.div`
-position: absolute;
-top: 30px;
-left: 150px
-`
+  position: absolute;
+  top: 30px;
+  left: 150px;
+`;
 
 export const SortItem = styled.div`
-padding: 10px;
-background-color: ${({theme})=> theme.background};
-border: 1px solid ${({theme})=> theme.text};
-&:hover{
-  color: ${({theme})=> theme.text};
-  cursor: pointer;
-}
-`
+  padding: 10px;
+  background-color: ${({ theme }) => theme.background};
+  border: 1px solid ${({ theme }) => theme.text};
+  &:hover {
+    color: ${({ theme }) => theme.text};
+    cursor: pointer;
+  }
+`;

@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, current } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 
@@ -12,7 +12,7 @@ import type { PayloadAction } from '@reduxjs/toolkit'
     },
  reducers:{ userLoggedIn : (state, {payload}) => {
    state.currentUser = payload
-   console.log(payload)
+   console.log(state.currentUser)
    state.loggedIn = true
   },}
 })

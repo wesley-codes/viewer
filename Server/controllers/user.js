@@ -33,7 +33,7 @@ const deleteUser = async (req, res, next) => {
 
 
 const getUser = async (req, res, next) => {
-  console.log("yes i entered")
+  
   try {
     const user = await User.findById(req.params.id);
     const { password, ...other } = user._doc;

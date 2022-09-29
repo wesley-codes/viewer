@@ -70,24 +70,23 @@ const deleteVideo = async (req, res, next) => {
 const getAVideo = async (req, res, next) => {
   try {
     const video = await Video.findOne({ videoId: req.params.id });
+    console.log("$$$$$$$$$$$=======", video);
     if (!video) return next(createError(404, "Video not found!"));
-    const getObjectParams_thumnail = {
-      Bucket: process.env.AWS_BUCKET_NAME,
-      Key: video.thumbnail,
-    };
-    const getObjectParams_video = {
-      Bucket: process.env.AWS_BUCKET_NAME,
-      Key: video.video,
-    };
+    // const getObjectParams_thumnail = {
+    //   Bucket: process.env.AWS_BUCKET_NAME,
+    //   Key: video.thumbnail,
+    // };
+    // const getObjectParams_video = {
+    //   Bucket: process.env.AWS_BUCKET_NAME,
+    //   Key: video.video,
+    // };
 
-    const command_thumbnail = new GetObjectCommand(getObjectParams_thumnail);
-    const command_video = new GetObjectCommand(getObjectParams_video);
+    // const command_thumbnail = new GetObjectCommand(getObjectParams_thumnail);
+    // const command_video = new GetObjectCommand(getObjectParams_video);
 
-    const thumbnail_url = await getSignedUrl(s3, command_thumbnail);
-    const video_url = await getSignedUrl(s3, command_video);
+    // const thumbnail_url = await getSignedUrl(s3, command_thumbnail);
+    // const video_url = await getSignedUrl(s3, command_video);
 
-    video.thumbnail = thumbnail_url;
-    video.video = video_url;
     res.status(200).json(video);
   } catch (err) {
     next(err);
@@ -96,8 +95,10 @@ const getAVideo = async (req, res, next) => {
 
 const addView = async (req, res, next) => {
   try {
-  const video =  await Video.findOneAndUpdate(req.params.id, { $inc: { views: 1 } });
-console.log(video)
+    const video = await Video.findOneAndUpdate(req.params.id, {
+      $inc: { views: 1 },
+    });
+    console.log(video);
     res.status(200).json({ msg: "View Increased" });
   } catch (err) {
     next(err);
@@ -108,24 +109,24 @@ const randomVideos = async (req, res, next) => {
   try {
     const videos = await Video.aggregate([{ $sample: { size: 40 } }]);
 
-    for (const video of videos) {
-      const getObjectParams_thumnail = {
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Key: video.thumbnail,
-      };
-      const getObjectParams_video = {
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Key: video.video,
-      };
-      const command_thumbnail = new GetObjectCommand(getObjectParams_thumnail);
-      const command_video = new GetObjectCommand(getObjectParams_video);
+    // for (const video of videos) {
+    //   const getObjectParams_thumnail = {
+    //     Bucket: process.env.AWS_BUCKET_NAME,
+    //     Key: video.thumbnail,
+    //   };
+    //   const getObjectParams_video = {
+    //     Bucket: process.env.AWS_BUCKET_NAME,
+    //     Key: video.video,
+    //   };
+    //   const command_thumbnail = new GetObjectCommand(getObjectParams_thumnail);
+    //   const command_video = new GetObjectCommand(getObjectParams_video);
 
-      const thumbnail_url = await getSignedUrl(s3, command_thumbnail);
-      const video_url = await getSignedUrl(s3, command_video);
+    //   const thumbnail_url = await getSignedUrl(s3, command_thumbnail);
+    //   const video_url = await getSignedUrl(s3, command_video);
 
-      video.thumbnail = thumbnail_url;
-      video.video = video_url;
-    }
+    //   //video.thumbnail = thumbnail_url;
+    //   //video.video = video_url;
+    // }
 
     res.status(200).json(videos);
   } catch (err) {
@@ -137,24 +138,24 @@ const trendingVideos = async (req, res, next) => {
   try {
     const videos = await Video.find().sort({ views: -1 }); //SEARCH THE DB AND RETURN THE MOST VIEWED VIDEOS USING SORT
 
-    for (const video of videos) {
-      const getObjectParams_thumnail = {
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Key: video.thumbnail,
-      };
-      const getObjectParams_video = {
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Key: video.video,
-      };
-      const command_thumbnail = new GetObjectCommand(getObjectParams_thumnail);
-      const command_video = new GetObjectCommand(getObjectParams_video);
+    // for (const video of videos) {
+    //   const getObjectParams_thumnail = {
+    //     Bucket: process.env.AWS_BUCKET_NAME,
+    //     Key: video.thumbnail,
+    //   };
+    //   const getObjectParams_video = {
+    //     Bucket: process.env.AWS_BUCKET_NAME,
+    //     Key: video.video,
+    //   };
+    //   const command_thumbnail = new GetObjectCommand(getObjectParams_thumnail);
+    //   const command_video = new GetObjectCommand(getObjectParams_video);
 
-      const thumbnail_url = await getSignedUrl(s3, command_thumbnail);
-      const video_url = await getSignedUrl(s3, command_video);
+    //   const thumbnail_url = await getSignedUrl(s3, command_thumbnail);
+    //   const video_url = await getSignedUrl(s3, command_video);
 
-      video.thumbnail = thumbnail_url;
-      video.video = video_url;
-    }
+    //   //video.thumbnail = thumbnail_url;
+    //  // video.video = video_url;
+    // }
 
     res.status(200).json({ msg: "Trends", videos });
   } catch (err) {
@@ -185,24 +186,24 @@ const getVideosByTags = async (req, res, next) => {
   try {
     const videos = await Video.find({ tags: { $in: allTags } }).limit(20); //$IN METHOD CHECKS IF THE QUERY IS INCLUDED IN THE DB
 
-    for (const video of videos) {
-      const getObjectParams_thumnail = {
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Key: video.thumbnail,
-      };
-      const getObjectParams_video = {
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Key: video.video,
-      };
-      const command_thumbnail = new GetObjectCommand(getObjectParams_thumnail);
-      const command_video = new GetObjectCommand(getObjectParams_video);
+    // for (const video of videos) {
+    //   const getObjectParams_thumnail = {
+    //     Bucket: process.env.AWS_BUCKET_NAME,
+    //     Key: video.thumbnail,
+    //   };
+    //   const getObjectParams_video = {
+    //     Bucket: process.env.AWS_BUCKET_NAME,
+    //     Key: video.video,
+    //   };
+    //   const command_thumbnail = new GetObjectCommand(getObjectParams_thumnail);
+    //   const command_video = new GetObjectCommand(getObjectParams_video);
 
-      const thumbnail_url = await getSignedUrl(s3, command_thumbnail);
-      const video_url = await getSignedUrl(s3, command_video);
+    //   const thumbnail_url = await getSignedUrl(s3, command_thumbnail);
+    //   const video_url = await getSignedUrl(s3, command_video);
 
-      video.thumbnail = thumbnail_url;
-      video.video = video_url;
-    }
+    //   //video.thumbnail = thumbnail_url;
+    //  // video.video = video_url;
+    // }
 
     res.status(200).json({ videos });
   } catch (err) {
@@ -218,24 +219,24 @@ const getVideosBySearch = async (req, res, next) => {
       title: { $regex: searchText, $options: "i" },
     }).limit(40); //SEARCH THE DB AND RETURN THE MOST VIEWED VIDEOS USING SORT
 
-    for (const video of videos) {
-      const getObjectParams_thumnail = {
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Key: video.thumbnail,
-      };
-      const getObjectParams_video = {
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Key: video.video,
-      };
-      const command_thumbnail = new GetObjectCommand(getObjectParams_thumnail);
-      const command_video = new GetObjectCommand(getObjectParams_video);
+    // for (const video of videos) {
+    //   const getObjectParams_thumnail = {
+    //     Bucket: process.env.AWS_BUCKET_NAME,
+    //     Key: video.thumbnail,
+    //   };
+    //   const getObjectParams_video = {
+    //     Bucket: process.env.AWS_BUCKET_NAME,
+    //     Key: video.video,
+    //   };
+    //   const command_thumbnail = new GetObjectCommand(getObjectParams_thumnail);
+    //   const command_video = new GetObjectCommand(getObjectParams_video);
 
-      const thumbnail_url = await getSignedUrl(s3, command_thumbnail);
-      const video_url = await getSignedUrl(s3, command_video);
+    //   const thumbnail_url = await getSignedUrl(s3, command_thumbnail);
+    //   const video_url = await getSignedUrl(s3, command_video);
 
-      video.thumbnail = thumbnail_url;
-      video.video = video_url;
-    }
+    //   //video.thumbnail = thumbnail_url;
+    //  // video.video = video_url;
+    // }
 
     res.status(200).json(videos);
   } catch (err) {
@@ -247,7 +248,7 @@ const getVideosBySearch = async (req, res, next) => {
 
 const likeVideo = async (req, res, next) => {
   const { videoId } = req.params;
-console.log(videoId)
+  console.log("++++++++", videoId);
   try {
     if (videoId === req.user.id) {
       res.status(403).json("You cant like this video!");
@@ -258,6 +259,7 @@ console.log(videoId)
         $pull: { dislikes: req.user.id },
       });
       res.status(200).json(video);
+      //console.log("video liked")
     }
   } catch (err) {
     next(err);
@@ -266,8 +268,9 @@ console.log(videoId)
 
 //DISLIKE VIDEO
 const dislikeVideo = async (req, res, next) => {
+  //video_id as parama
   const { videoId } = req.params;
-
+  console.log(videoId);
   try {
     if (videoId === req.user.id) {
       res.status(403).json("You cant like this video!");
@@ -277,7 +280,7 @@ const dislikeVideo = async (req, res, next) => {
         $addToSet: { dislikes: req.user.id },
         $pull: { likes: req.user.id },
       });
-      res.status(200).json("You liked this video",video);
+      res.status(200).json(video);
     }
   } catch (err) {
     next(err);

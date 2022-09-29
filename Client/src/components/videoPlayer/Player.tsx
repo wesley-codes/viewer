@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, memo , useEffect} from "react";
 import ReactPlayer from "react-player";
 
 interface PlayerProps {
@@ -9,9 +9,11 @@ interface PlayerProps {
   playing?: boolean;
   volume?: number;
   url: string;
+  loop?: boolean;
   playbackRate?: number;
   onMouseLeave?: () => void
-
+  onBuffer?:()=>void
+  onBufferEnd?: ()=>void
   onProgress?: (currentDuration: any) => void;
 }
 
@@ -26,10 +28,15 @@ const Player = forwardRef(
       url,
       playbackRate,
       onProgress,
-      onMouseLeave
+      onMouseLeave,
+      loop,
+      onBuffer,
+      onBufferEnd
     }: PlayerProps,
     ref
   ) => {
+
+    
     return (
       <ReactPlayer
       
@@ -38,11 +45,17 @@ const Player = forwardRef(
         width={width}
         height={height}
         muted={muted}
-        playing={playing}
+       playing={playing}
         volume={volume}
         url={url}
         playbackRate={playbackRate}
         onProgress={onProgress}
+        loop={loop}
+        onBuffer={onBuffer}
+        onBufferEnd ={onBufferEnd}
+        style={{
+objectFit:"cover"
+        }}
         // config={{
         //   file: {
         //     attributes: {
@@ -55,4 +68,4 @@ const Player = forwardRef(
   }
 );
 
-export default Player;
+export default memo(Player);

@@ -22,6 +22,7 @@ interface GetUserID {
   image: string;
   subscribers: number;
   subscribedUsers: string[];
+  token: string
 }
 
 interface GetVideoID {
@@ -38,33 +39,44 @@ interface GetVideoID {
   dislikes: string[];
 }
 
+
+type LikeVideoTypes  ={
+  v_id :string
+  token: string
+}
+
 export const videoApi = createApi({
   reducerPath: "videoApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/api/v1/",
+    baseUrl: "http://localhost:5000/api/v1/video",
   }),
-  tagTypes: ["Video"],
+  tagTypes: ["Likes"],
 
   endpoints: (builder) => ({
     getRandomVideo: builder.query<RandomVideoTypes[], void>({
-      query: () => "video/ran", // endpoint
-      providesTags:["Video"]
+      query: () => "/ran", // endpoint
+     // providesTags:["Video"]
     }),
     
     getVideoByID: builder.query<GetVideoID, string>({
-      query: (videoId) => `video/${videoId}`,
-      providesTags:["Video"]
+      query: (videoId) => `/${videoId}`,
+      providesTags:["Likes"]
+
 
     }),
-    likeVideo: builder.mutation<GetVideoID, string>({
-      query: (id) => ({
-        url: `/like/${id}`,
-        method: "PUT",
-      }),
-      transformResponse: (response: { data: GetVideoID}, meta, arg) =>
-        response.data,
+    getLikesLength: builder.query<GetVideoID, string>({
+      query: (videoId) => `/${videoId}`,
+      providesTags:["Likes"]
 
-      invalidatesTags: ["Video"],
+    }),
+    likeVideo: builder.mutation<GetVideoID, LikeVideoTypes>({
+      query: (video) => ({
+        url: `/like/${video.v_id}`,
+        method: "POST",
+        body: video
+      }),
+
+      invalidatesTags: ["Likes"],
    
     }),
   }),
@@ -74,5 +86,6 @@ export const videoApi = createApi({
 export const {
   useGetRandomVideoQuery,
   useGetVideoByIDQuery,
+  useGetLikesLengthQuery,
   useLikeVideoMutation
 } = videoApi;

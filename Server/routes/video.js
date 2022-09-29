@@ -65,9 +65,9 @@ router.get("/:id", getAVideo);
 router.put("/view/:id", addView);
 
 //LIKE A VIDEO
-router.put("/like/:videoId", verifyToken, likeVideo);
+router.post("/like/:videoId", verifyToken, likeVideo);
 
 //DISLIKE VIDEO
-router.put("/dislike/:videoId", verifyToken, dislikeVideo);
+router.post("/dislike/:videoId", verifyToken, dislikeVideo);
 
 module.exports = router;

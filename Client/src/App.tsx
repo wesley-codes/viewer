@@ -38,16 +38,16 @@ function App() {
   }, [theme]);
 
 
-  useEffect(()=>{
-    const loggedInUser = localStorage.getItem("user")
-    if(!loggedInUser){
-      navigate("/")
-    }else{
-      const foundUser = JSON.parse(loggedInUser);
-      dispatch(userLoggedIn(foundUser))
-    }
+  // useEffect(()=>{
+  //   const loggedInUser = localStorage.getItem("user")
+  //   if(!loggedInUser){
+  //     navigate("/")
+  //   }else{
+  //     const foundUser = JSON.parse(loggedInUser);
+  //     dispatch(userLoggedIn(foundUser))
+  //   }
     
-      },[])
+  //     },[])
 
   return (
     <Theme theme={isDarkTheme}>
@@ -120,3 +120,7 @@ function App() {
 }
 
 export default App;
+
+
+
+

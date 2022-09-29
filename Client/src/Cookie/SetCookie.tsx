@@ -4,4 +4,6 @@ export const setCookie = (cValue: string, exdays: number) => {
   let expires = "expires=" + date.toUTCString();
   document.cookie =
     "viewer_cookie-token_x_token" + "=" + cValue + ";" + expires + ";path=/";
-};
+
+console.log(document.cookie)
+  };

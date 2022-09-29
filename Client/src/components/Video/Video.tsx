@@ -54,7 +54,7 @@ const VideoBox = ({
   //const {data}  = useGetVideoByIDQuery(id)
    const { data:user } = useGetUserByIDQuery(channelName);
 
-   console.log("===",user);
+  // console.log("===",user);
   //http://localhost:5000/api/v1/user/find
 
   const mouseEnterHandler = () => {
@@ -68,7 +68,7 @@ const VideoBox = ({
 
     setPlay(false);
   };
-
+//console.log(">>>>>>>",id)
  
   return (
     <React.Fragment>
@@ -83,13 +83,14 @@ const VideoBox = ({
                 width="200"
                 height="200"
                 playing={true}
+                
                 muted
                 url="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
               ></Player>
             ) : (
               <div>
                 <LazyLoadImage
-                src={imgUrl}
+                src={"https://bucket-viewer.s3.us-east-1.amazonaws.com/"+imgUrl}
                 onMouseLeave={mouseLeaveHandler}
                 effect="blur"
                 width="100%"

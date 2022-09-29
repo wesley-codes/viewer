@@ -36,6 +36,8 @@ import {
   TopContainer,
   VideoTitle,
 } from "../../styles/Video.styles";
+import LogoSVG from "../SVG/Logo";
+import AnimatedLoader from "../Loader/AnimatedLoader";
 
 //====================Player Control styles==================
 
@@ -46,7 +48,7 @@ const useStyles = makeStyles({
     bottom: "0",
     right: "0",
     left: "0",
-    border: "3px solid green",
+    // border: "3px solid green",
     background: "rgba(0,0,0,0.6)",
     display: "flex",
     flexDirection: "column",
@@ -128,15 +130,16 @@ const PrettoSlider = withStyles({
 })(Slider);
 
 interface PlayerControlProps {
-  ref: React.RefObject<HTMLDivElement>
+  ref: React.RefObject<HTMLDivElement>;
 
   muted: boolean;
   volume: number;
   playing: boolean;
+  buffer: boolean;
   played: number;
   ellapsedTime: string;
   duration: string;
-  videoTitle:string;
+  videoTitle: string;
   playbackRate: number;
   onRewind: () => void;
   onPlayPause: () => void;
@@ -175,8 +178,11 @@ const PlayerControls = forwardRef(
       duration,
       onChangeDisplayFormat,
       onAddBookmark,
-      videoTitle
-    }: PlayerControlProps, ref ) => {
+      videoTitle,
+      buffer,
+    }: PlayerControlProps,
+    ref
+  ) => {
     const classes = useStyles();
 
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
@@ -193,7 +199,6 @@ const PlayerControls = forwardRef(
 
     const open = Boolean(anchorEl);
     const id = open ? "playbackrate-popover" : undefined;
-
     return (
       <ControlWrapper ref={ref as React.RefObject<HTMLDivElement>}>
         <TopContainer>
@@ -235,7 +240,6 @@ const PlayerControls = forwardRef(
             <FastForward fontSize="medium" />
           </IconButton>
         </MiddleContainer>
-
         <BottomContainer>
           <SliderContainer>
             <PrettoSlider

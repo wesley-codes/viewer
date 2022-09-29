@@ -24,6 +24,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../services/store";
 import { userLoggedIn } from "../../Features/UserSlice";
+import { setCookie } from "../../Cookie/SetCookie";
 const Container = styled.div`
   display: flex;
   background-color: #f6f6f6;
@@ -83,10 +84,10 @@ const SignIn = () => {
       .unwrap()
       .then((data: any) => {
         const { token, ...other } = data;
-        // setUser(other);
+        setCookie(token, 3)
         dispatch(userLoggedIn(other))
         //store user in local storage
-        localStorage.setItem("user", JSON.stringify(other));
+       // localStorage.setItem("user", JSON.stringify(other));
         navigate("/");
       })
       .catch((err) => {
@@ -115,7 +116,7 @@ const SignIn = () => {
             Don't have an account?
             <span style={{ marginLeft: "8px" }}>
               <Link
-                to="/signUp"
+                to="/signup"
                 style={{ textDecoration: "none", color: "#7B2CBF" }}
               >
                 Sign up

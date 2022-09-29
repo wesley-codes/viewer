@@ -1,7 +1,6 @@
-
 import { Grid, Typography, Paper } from "@material-ui/core";
-import React, { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect, useRef, memo } from "react";
+import { Navigate, useParams, useNavigate } from "react-router-dom";
 import {
   Container,
   LeftContainer,
@@ -26,7 +25,7 @@ import {
   CommentWrapper,
   SortSelect,
   SortItem,
-  
+  LikeIcon,
 } from "../../styles/Video.styles";
 import screenfull from "screenfull";
 import { ThumbnailTypes } from "../../Types/types";
@@ -46,8 +45,17 @@ import Description from "../Description/Description";
 import { Sort } from "@material-ui/icons";
 import Comment_LG from "../Comments/Comment_LG";
 import Comment_SM from "../Comments/Comment_SM";
-import {useGetVideoByIDQuery, useLikeVideoMutation} from "../../services/VideoApi"
+import {
+  useGetLikesLengthQuery,
+  useGetVideoByIDQuery,
+  useLikeVideoMutation,
+} from "../../services/VideoApi";
 import { useGetUserByIDQuery } from "../../services/UserApi";
+import { TypedUseSelectorHook, useSelector } from "react-redux";
+import { RootState } from "../../services/store";
+import { getCookie } from "../../Cookie/GetCookie";
+import LogoSVG from "../SVG/Logo";
+import AnimatedLoader from "../Loader/AnimatedLoader";
 interface controlStateProps {
   playing: boolean;
   muted: boolean;
@@ -64,13 +72,24 @@ type BookmarkProps = {
 };
 let count = 0;
 const VideoDetails = () => {
-  const { id:videoID } = useParams();
-  const [likevideo , {isSuccess}] = useLikeVideoMutation()
-  const {data:video, error, isLoading , isFetching} = useGetVideoByIDQuery(videoID!)
-const {data:user} = useGetUserByIDQuery(video?.userId!)
-  console.log(user)
+  const navigate = useNavigate();
 
+  const { id } = useParams(); // using params
+  //RTK QUERY
+  const [likevideo, { isSuccess }] = useLikeVideoMutation(); //like video RTK
+  //console.log("the particular video", id);
+  const {
+    data: video,
+    error,
+    isLoading,
+    isFetching,
+  } = useGetVideoByIDQuery(id!); //Fetching a particular video by ID to play it
+  const { data: user } = useGetUserByIDQuery(video?.userId!); //Fetching the particuar owner of the channel by passing the video.userId
+  const { data: likesLength } = useGetLikesLengthQuery(id!);
+  const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
+  //states
+  const { currentUser } = useAppSelector((state) => state.User); //selecting currentUser state from the userSlice
   const playerRef = useRef<any>(null);
   const canvasRef = useRef<any>(null);
   const sortRef = useRef<any>(null);
@@ -80,6 +99,8 @@ const {data:user} = useGetUserByIDQuery(video?.userId!)
   const [relatedVideos, setRelatedVideos] = useState<ThumbnailTypes[]>([]);
   const [bookmark, setBookmark] = useState<BookmarkProps[]>([]);
   const [showSort, setShowSort] = useState<boolean>(false);
+  const [buffer, setBuffer] = useState<boolean>(true);
+  const [likeAnimate, setLikeAnimate] = useState<boolean>(false);
   const [showComment, setShowComment] = useState<boolean>(false);
   const [controlState, setControlState] = useState<controlStateProps>({
     playing: true,
@@ -96,20 +117,17 @@ const {data:user} = useGetUserByIDQuery(video?.userId!)
     setRelatedVideos(ThumbnailData.splice(0, 6));
   }, []);
 
-  const screenSize_Mobile = window.matchMedia("(max-width: 600px)")
-  const screensize_Tablet = window.matchMedia("(max-width: 820px)")
-  useEffect(()=>{
-   //if 
-    if(showComment && screenSize_Mobile.matches){
-      document.body.style.overflow = "hidden"
-    
-    }else if (!showComment || screensize_Tablet.matches){
-      console.log("=====you gotta work tablet")
-      document.body.style.overflow = "auto"
+  const screenSize_Mobile = window.matchMedia("(max-width: 600px)");
+  const screensize_Tablet = window.matchMedia("(max-width: 820px)");
+  useEffect(() => {
+    //if
+    if (showComment && screenSize_Mobile.matches) {
+      document.body.style.overflow = "hidden";
+    } else if (!showComment || screensize_Tablet.matches) {
+      //console.log("=====you gotta work tablet")
+      document.body.style.overflow = "auto";
     }
-    
-
-  },[showComment, screenSize_Mobile, screensize_Tablet])
+  }, [showComment, screenSize_Mobile, screensize_Tablet]);
 
   const formatPlayerDuration = (seconds: number) => {
     //formarting duration of video
@@ -260,15 +278,51 @@ const {data:user} = useGetUserByIDQuery(video?.userId!)
   const openCommentModal = () => {
     setShowComment(true);
 
-    //if modal is true && 
+    //if modal is true &&
   };
 
+  useEffect(() => {
+    // currentUser === null ? set the like active color to #fff
 
-const likevideoHandler = async()=> {
-  await likevideo(video?._id!).unwrap()
-}
+    // user.id is present in the video.like array set the color to active
+    const checkIfExistLikeArray = video?.likes.indexOf(currentUser?._id)!;
+    console.log(checkIfExistLikeArray);
+    if (checkIfExistLikeArray >= 0) {
+      //console.log("yes it exists");
+      setLikeAnimate(true);
+    }
 
+    //console.log(video?.likes);
+  }, [video?.likes]);
 
+  useEffect(() => {
+    setBuffer(false);
+  }, []);
+
+  const likevideoHandler = async () => {
+    // !currentUser navigate so user can signin
+    const token = getCookie();
+    //console.log(currentUser)
+
+    if (!currentUser) {
+      navigate("/signin");
+      //setLikeAnimate(false);
+    }
+    console.log({ ...currentUser, v_id: video?._id!, token });
+    likevideo({ ...currentUser, v_id: video?._id!, token });
+    //setLikeAnimate(true);
+  };
+
+  //console.log(likesLength?.likes.length)
+  const bufferStartHandler = () => {
+    console.log("Bufering.......");
+    setBuffer(true);
+  };
+
+  const bufferEndHandler = () => {
+    console.log("buffering stoped ,,,,,,play");
+    setBuffer(false);
+  };
 
   return (
     <React.Fragment>
@@ -281,19 +335,26 @@ const likevideoHandler = async()=> {
               ref={playerContainerRef}
               onMouseMove={mouseMoveHandler}
             >
-            
               <Player
                 ref={playerRef}
                 width="100%"
                 height="100%"
                 muted={muted}
                 // controls
+                loop={true}
                 playing={playing}
                 volume={volume}
-                url={video?.video!}
+                url={
+                  "https://bucket-viewer.s3.us-east-1.amazonaws.com/" +
+                  video?.video!
+                }
                 playbackRate={playbackRate}
                 onProgress={progressHandler}
+                onBuffer={bufferStartHandler}
+                onBufferEnd={bufferEndHandler}
               />
+
+              {buffer && <AnimatedLoader width={50} height={50} />}
 
               <PlayerControls
                 ref={controlRef}
@@ -304,6 +365,7 @@ const likevideoHandler = async()=> {
                 muted={muted}
                 onMute={handleMute}
                 volume={volume}
+                buffer={buffer}
                 onVolumeChange={handleVolumeChange}
                 onVolumeSeekUp={handleVolumeSeekUp}
                 playbackRate={playbackRate}
@@ -317,7 +379,7 @@ const likevideoHandler = async()=> {
                 duration={totalDuration}
                 onChangeDisplayFormat={changeDisplayFormatHandler}
                 onAddBookmark={addBookmarkHandler}
-                videoTitle = {video?.title!}
+                videoTitle={video?.title!}
               />
             </VideoContainer>
 
@@ -365,14 +427,11 @@ const likevideoHandler = async()=> {
                 </UserAction>
                 <ActionBox>
                   <IconBox>
-                    <LikeSVG
-                      width={20}
-                      height={20}
-                      stroke="#9556cc"
-                      fill="#9556cc"
+                    <LikeIcon
                       onClick={likevideoHandler}
+                      active={+likeAnimate}
                     />
-                    <IconLabel>{video?.likes.length}</IconLabel>
+                    <IconLabel>{likesLength?.likes.length}</IconLabel>
                   </IconBox>
 
                   <IconBox>
@@ -417,11 +476,8 @@ const likevideoHandler = async()=> {
                 </ActionBox>
               </ActionContainer>
 
-              <Description
-                descp={video?.description!}
-              />
+              <Description descp={video?.description!} />
               <CommentWrapper>
-              
                 <CommentBox onClick={openCommentModal}>
                   {" "}
                   161 comments
@@ -459,21 +515,13 @@ const likevideoHandler = async()=> {
         <RightContainer>
           <Title title="Related Videos" margin="none" />
           <InnerContainer>
-            {relatedVideos.map((data) => (
+            {relatedVideos.map((data, index) => (
               <RelatedVideo
-                key={data.id}
+                key={index}
                 videoUrl={data.videoUrl}
                 videoThumbnail={data.imgUrl}
               />
             ))}
-
-            {/* {relatedVideos.map((data) => (
-              <RelatedVideo
-                key={data.id}
-                videoUrl={data.videoUrl}
-                videoThumbnail={data.imgUrl}
-              />
-            ))} */}
           </InnerContainer>
         </RightContainer>
       </Container>
