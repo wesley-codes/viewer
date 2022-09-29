@@ -28,7 +28,7 @@ interface NavProps {
 const Navbar = ({ sm }: NavProps) => {
   const navigate = useNavigate()
 const useAppSelector:TypedUseSelectorHook<RootState> =useSelector
-const {loggedIn} = useAppSelector((state) => state.User)
+const {currentUser} = useAppSelector((state) => state.User)
   const gotosignIn = ()=>{
     navigate("/signin")
   }
@@ -51,7 +51,7 @@ const {loggedIn} = useAppSelector((state) => state.User)
           </Inputcontainer>
         </FirstContainer>
         <SecondContainer>
-     <Signin onClick={gotosignIn} style={{display : loggedIn ? "none" :"block"}}>Signin</Signin>
+     <Signin onClick={gotosignIn} style={{display : currentUser ? "none" :"block"}}>Signin</Signin>
           <NotificationBox>
             <Badge>5</Badge>
             <BellIcon />

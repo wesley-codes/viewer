@@ -32,7 +32,7 @@ interface MenuProps {
 const Menu = () => {
   const navigate = useNavigate();
   const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
-  const { loggedIn } = useAppSelector((state) => state.User);
+  const { currentUser} = useAppSelector((state) => state.User);
   const [active, setActive] = useState(false);
 
   const logout = () => {
@@ -43,7 +43,7 @@ const Menu = () => {
     });
     navigate("/signin");
   };
-  console.log(loggedIn);
+  //console.log(loggedIn);
 
   return (
     <SideBar active={+active}>
@@ -94,7 +94,7 @@ const Menu = () => {
         <ProfileItem
           active={+active}
           onClick={logout}
-          style={{ display: loggedIn ? "block" : "none" }}
+          style={{ display: currentUser? "block" : "none" }}
         >
           <ProfileDetail>
             <MenuItem active={active} title="Logout" tooltip="Logout">

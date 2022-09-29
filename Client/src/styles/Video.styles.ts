@@ -7,25 +7,25 @@ import HomeSVG from "../components/SVG/Home";
 import LikeSVG from "../components/SVG/Like";
 
 const heartbeat = keyframes`
-  0%
+   0%
   {
     transform: scale( .75 );
   }
   20%
   {
-    transform: scale( 3 );
+    transform: scale( 1 );
   }
   40%
   {
-    transform: scale( 3 );
+    transform: scale( .75 );
   }
   60%
   {
-    transform: scale( 5 );
+    transform: scale( 1 );
   }
   80%
   {
-    transform: scale(5 );
+    transform: scale( .75 );
   }
   100%
   {
@@ -39,7 +39,7 @@ export const Container = styled.div`
   display: flex;
 
   //background-color: red;
-  ${Mobile({ flexDirection: "column" })}
+  ${Mobile({ flexDirection: "column", height:"100vh" })}
 `;
 export const LeftWrapper = styled.div`
   flex: 5;
@@ -267,11 +267,14 @@ export const ActionBox = styled.div`
   justify-content: space-between;
 `;
 
-export const IconBox = styled.div`
+export const IconBox = styled.div<any>`
   display: flex;
   margin: 0 10px;
   align-items: center;
   cursor: pointer;
+  & :active {
+    animation:  ${heartbeat} 5s infinite;
+  }
 `;
 
 export const LikeIcon = styled(LikeSVG)<any>`
@@ -279,9 +282,7 @@ export const LikeIcon = styled(LikeSVG)<any>`
   height: 20px;
   stroke: #9556cc;
   fill: ${({ active }) => (active ? "#9556cc" : "#fff")};
-  & :active {
-    animation: ${heartbeat} 5s infinite;
-  }
+
 `;
 
 export const IconLabel = styled.span`

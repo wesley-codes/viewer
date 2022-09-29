@@ -21,8 +21,8 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useUserSigninMutation } from "../../services/AuthApi";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch } from "../../services/store";
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../services/store";
 import { userLoggedIn } from "../../Features/UserSlice";
 import { setCookie } from "../../Cookie/SetCookie";
 const Container = styled.div`
@@ -55,8 +55,21 @@ type UserTypes = {
 
 const SignIn = () => {
   const navigate = useNavigate();
+
+  //Redux Dispatch 
   const dispatch = useDispatch<AppDispatch>();
+
+
+//Redux Selector states
+
+const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
+const {likedLinked} = useAppSelector(state => state.User)
+
+  //Redux RTK Query
   const [loginUser, result] = useUserSigninMutation();
+
+
+  //React useState Hooks
   const [user, setUser] = useState<UserTypes>();
   const [viewPassword, setViewPassword] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState({
@@ -64,17 +77,17 @@ const SignIn = () => {
     success: false,
   });
 
+  //use Form Hook
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<InputTypes>();
 
-    useEffect(()=>{
-  localStorage.clear()
-  
-
-    },[])
+  useEffect(() => {
+    //clear localstorage whenever this page is opened
+    localStorage.clear();
+  }, []);
 
   const onSubmit: SubmitHandler<InputTypes> = (data) => {
     let { email, password } = data;
@@ -84,11 +97,16 @@ const SignIn = () => {
       .unwrap()
       .then((data: any) => {
         const { token, ...other } = data;
-        setCookie(token, 3)
-        dispatch(userLoggedIn(other))
+        setCookie(token, 3);
+        dispatch(userLoggedIn(other));
         //store user in local storage
-       // localStorage.setItem("user", JSON.stringify(other));
-        navigate("/");
+        // localStorage.setItem("user", JSON.stringify(other));
+        if(!likedLinked){
+          navigate("/");
+        }else{
+          //navigate user to the particular link which he was about to like
+          navigate(`${likedLinked}`)
+        }
       })
       .catch((err) => {
         const { data } = err;

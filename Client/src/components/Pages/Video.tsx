@@ -1,6 +1,6 @@
 import { Grid, Typography, Paper } from "@material-ui/core";
 import React, { useState, useEffect, useRef, memo } from "react";
-import { Navigate, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   Container,
   LeftContainer,
@@ -51,11 +51,12 @@ import {
   useLikeVideoMutation,
 } from "../../services/VideoApi";
 import { useGetUserByIDQuery } from "../../services/UserApi";
-import { TypedUseSelectorHook, useSelector } from "react-redux";
-import { RootState } from "../../services/store";
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../services/store";
 import { getCookie } from "../../Cookie/GetCookie";
 import LogoSVG from "../SVG/Logo";
 import AnimatedLoader from "../Loader/AnimatedLoader";
+import { savedLikedLink } from "../../Features/UserSlice";
 interface controlStateProps {
   playing: boolean;
   muted: boolean;
@@ -72,12 +73,16 @@ type BookmarkProps = {
 };
 let count = 0;
 const VideoDetails = () => {
-  const navigate = useNavigate();
 
+  //React Routers Hook
+  const navigate = useNavigate();
+  const location = useLocation()
   const { id } = useParams(); // using params
+
+  
+
   //RTK QUERY
   const [likevideo, { isSuccess }] = useLikeVideoMutation(); //like video RTK
-  //console.log("the particular video", id);
   const {
     data: video,
     error,
@@ -86,10 +91,22 @@ const VideoDetails = () => {
   } = useGetVideoByIDQuery(id!); //Fetching a particular video by ID to play it
   const { data: user } = useGetUserByIDQuery(video?.userId!); //Fetching the particuar owner of the channel by passing the video.userId
   const { data: likesLength } = useGetLikesLengthQuery(id!);
-  const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-  //states
+
+  //Redux states
+  const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
   const { currentUser } = useAppSelector((state) => state.User); //selecting currentUser state from the userSlice
+
+
+
+  //Redux Dispatch
+const  dispatch = useDispatch<AppDispatch>()
+
+
+  
+
+
+  //usestates Hooks
   const playerRef = useRef<any>(null);
   const canvasRef = useRef<any>(null);
   const sortRef = useRef<any>(null);
@@ -117,17 +134,7 @@ const VideoDetails = () => {
     setRelatedVideos(ThumbnailData.splice(0, 6));
   }, []);
 
-  const screenSize_Mobile = window.matchMedia("(max-width: 600px)");
-  const screensize_Tablet = window.matchMedia("(max-width: 820px)");
-  useEffect(() => {
-    //if
-    if (showComment && screenSize_Mobile.matches) {
-      document.body.style.overflow = "hidden";
-    } else if (!showComment || screensize_Tablet.matches) {
-      //console.log("=====you gotta work tablet")
-      document.body.style.overflow = "auto";
-    }
-  }, [showComment, screenSize_Mobile, screensize_Tablet]);
+  
 
   const formatPlayerDuration = (seconds: number) => {
     //formarting duration of video
@@ -302,9 +309,9 @@ const VideoDetails = () => {
   const likevideoHandler = async () => {
     // !currentUser navigate so user can signin
     const token = getCookie();
-    //console.log(currentUser)
 
     if (!currentUser) {
+      dispatch(savedLikedLink(location.pathname))
       navigate("/signin");
       //setLikeAnimate(false);
     }
@@ -426,7 +433,7 @@ const VideoDetails = () => {
                   <SubscribeBtn radius={5}>SUBSCRIBE</SubscribeBtn>
                 </UserAction>
                 <ActionBox>
-                  <IconBox>
+                  <IconBox active={+likeAnimate}>
                     <LikeIcon
                       onClick={likevideoHandler}
                       active={+likeAnimate}
