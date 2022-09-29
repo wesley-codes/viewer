@@ -1,5 +1,5 @@
 import { createSlice, current } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
+
 
 type UserTypes = {
   _id: string;
@@ -22,13 +22,19 @@ const UserReducer = createSlice({
       state.currentUser = payload;
       console.log(state.currentUser);
     },
-    savedLikedLink:(state, {payload}) =>{
-      state.likedLinked = payload
-      console.log( state.likedLinked)
-    }
+    savedLikedLink: (state, { payload }) => {
+      state.likedLinked = payload;
+      console.log(state.likedLinked);
+    },
+    logOut: (state) => {
+      state.currentUser = null as unknown as UserTypes;
+      state.likedLinked = null as unknown as string;
+
+      localStorage.clear();
+    },
   },
 });
 
-export const { userLoggedIn , savedLikedLink} = UserReducer.actions;
+export const { userLoggedIn, savedLikedLink, logOut } = UserReducer.actions;
 
 export default UserReducer;

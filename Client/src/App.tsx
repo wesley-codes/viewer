@@ -11,7 +11,7 @@ import {
 } from "./styles/GlobalStyles.styles";
 
 import { Theme } from "./styles/Theme";
-import { BrowserRouter, Routes, Route, useNavigate} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import VideoDetails from "./components/Pages/Video";
 import Browse from "./components/Pages/Browse";
 import Trending from "./components/Pages/Trending";
@@ -20,12 +20,14 @@ import SignIn from "./components/Pages/SignIn";
 import Profile from "./components/Pages/Profile";
 import { userLoggedIn } from "./Features/UserSlice";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import { AppDispatch } from "./services/store";
+import { AppDispatch, RootState } from "./services/store";
 
 
 function App() {
-  const navigate = useNavigate()
   const [theme, setTheme] = useState("");
+  const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+  const { currentUser} = useAppSelector((state) => state.User);
+
   const dispatch = useDispatch<AppDispatch>();
   const isDarkTheme = theme === "darkTheme";
   const toggleTheme = () => {
@@ -38,7 +40,6 @@ function App() {
   }, [theme]);
 
 
-
   return (
     <Theme theme={isDarkTheme}>
       <GloabalStyle />
@@ -46,7 +47,7 @@ function App() {
           <Container>
             <Routes>
               <Route path="/signup" element={<SignUp />} />
-              <Route path="/signIn" element={<SignIn />} />
+              <Route path="/signIn" element={  <SignIn />} />
               <Route path="/profile" element={<Profile />} />
 
               <Route path="/">

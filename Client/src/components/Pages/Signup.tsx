@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import {
   FormContainer,
@@ -22,8 +22,8 @@ import { useUserSignupMutation } from "../../services/AuthApi";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { FlashOffOutlined } from "@material-ui/icons";
-
-
+import { TypedUseSelectorHook, useSelector } from "react-redux";
+import { RootState } from "../../services/store";
 
 type InputTypes = {
   channelName: string;
@@ -32,12 +32,11 @@ type InputTypes = {
   confirmPassword: string;
 };
 
-
 type ErrorType = {
-  success : boolean
-  status: number
-  errMessage: string
-}
+  success: boolean;
+  status: number;
+  errMessage: string;
+};
 
 const Container = styled.div`
   display: flex;
@@ -54,7 +53,11 @@ const Container = styled.div`
 const SignUp = () => {
   const navigate = useNavigate();
 
+  //Redux State
+  const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+  const { currentUser } = useAppSelector((state) => state.User);
 
+  //Use Form Hooke
   const {
     register,
     handleSubmit,
@@ -62,35 +65,42 @@ const SignUp = () => {
     formState: { errors },
   } = useForm<InputTypes>();
 
+  //React useState Hook
   const password = watch("password", "");
-  const [createUser, {error}] = useUserSignupMutation();
+  const [createUser, { error }] = useUserSignupMutation();
   const [viewPassword, setViewPassword] = useState<boolean>(false);
   const [confirmPassword, setConfirmPassword] = useState<boolean>(false);
-const [errorMessage , setErrorMessage] = useState({
-  errMsg :"",
-  success : false
-})
- 
+  const [errorMessage, setErrorMessage] = useState({
+    errMsg: "",
+    success: false,
+  });
 
+  useEffect(() => {
+    //currentUser exist ? navigate to homepage
+    if (currentUser) {
+      navigate("/");
+    }
+  }, []);
+
+  //onsumbit form Handler
   const onSubmit: SubmitHandler<InputTypes> = (data) => {
     let { channelName, email, ...others } = data;
-   email = email.trim()[0].toUpperCase() + email.slice(1);
+    email = email.trim()[0].toUpperCase() + email.slice(1);
 
     channelName = channelName.trim()[0].toUpperCase() + channelName.slice(1);
-    createUser({ name: channelName, email:email, ...others })
+    createUser({ name: channelName, email: email, ...others })
       .unwrap()
-      .then((data:any) => {
+      .then((data: any) => {
         navigate(`/signin`);
       })
       .catch((err) => {
-        const {data} = err
-        console.log({success: data.success, errMsg:data.errMessage});
-        setErrorMessage({success: data.success, errMsg:data.errMessage})
+        const { data } = err;
+        console.log({ success: data.success, errMsg: data.errMessage });
+        setErrorMessage({ success: data.success, errMsg: data.errMessage });
       });
     console.log(channelName);
-
   };
-        //  console.log("error comming from rtk",error)
+  //  console.log("error comming from rtk",error)
 
   return (
     <Container>
@@ -221,9 +231,7 @@ const [errorMessage , setErrorMessage] = useState({
           </Terms>
           <BtnContainer>
             <CreateBtn>Create Account</CreateBtn>
-            
           </BtnContainer>
-
 
           <ErrorContainer msg="errMsg">
             {!errorMessage.success && (
@@ -231,7 +239,6 @@ const [errorMessage , setErrorMessage] = useState({
             )}
           </ErrorContainer>
         </FormContainer>
-        
       </LeftContainer>
     </Container>
   );

@@ -22,7 +22,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useUserSigninMutation } from "../../services/AuthApi";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../services/store";
+import { AppDispatch, persistor, RootState } from "../../services/store";
 import { userLoggedIn } from "../../Features/UserSlice";
 import { setCookie } from "../../Cookie/SetCookie";
 const Container = styled.div`
@@ -63,7 +63,7 @@ const SignIn = () => {
 //Redux Selector states
 
 const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
-const {likedLinked} = useAppSelector(state => state.User)
+const {likedLinked, currentUser} = useAppSelector(state => state.User)
 
   //Redux RTK Query
   const [loginUser, result] = useUserSigninMutation();
@@ -86,8 +86,10 @@ const {likedLinked} = useAppSelector(state => state.User)
 
   useEffect(() => {
     //clear localstorage whenever this page is opened
-    localStorage.clear();
-  }, []);
+if(currentUser){
+  navigate("/")
+}
+}, []);
 
   const onSubmit: SubmitHandler<InputTypes> = (data) => {
     let { email, password } = data;

@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { TypedUseSelectorHook, useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { persistor, RootState } from "../../services/store";
+import { logOut } from "../../Features/UserSlice";
+import { AppDispatch, persistor, RootState } from "../../services/store";
 import {
   HomeIcon,
   LogoDetails,
@@ -31,18 +32,19 @@ interface MenuProps {
 
 const Menu = () => {
   const navigate = useNavigate();
+
+  const dispatch = useDispatch<AppDispatch>();
+
   const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
-  const { currentUser} = useAppSelector((state) => state.User);
+  const { currentUser } = useAppSelector((state) => state.User);
   const [active, setActive] = useState(false);
 
-  const logout = () => {
-    //clearing reducer localstorage using the persistor
-    persistor.pause();
-    persistor.flush().then(() => {
-      return persistor.purge();
-    });
+  const logoutHandler = () => {
+    //dispatching logout reducer from the redux slice and navigate to signin page
+    dispatch(logOut());
     navigate("/signin");
   };
+
   //console.log(loggedIn);
 
   return (
@@ -93,8 +95,8 @@ const Menu = () => {
         </MenuItem>
         <ProfileItem
           active={+active}
-          onClick={logout}
-          style={{ display: currentUser? "block" : "none" }}
+          onClick={logoutHandler}
+          style={{ display: currentUser ? "block" : "none" }}
         >
           <ProfileDetail>
             <MenuItem active={active} title="Logout" tooltip="Logout">
