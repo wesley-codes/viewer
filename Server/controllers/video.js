@@ -70,7 +70,7 @@ const deleteVideo = async (req, res, next) => {
 const getAVideo = async (req, res, next) => {
   try {
     const video = await Video.findOne({ videoId: req.params.id });
-    console.log("$$$$$$$$$$$=======", video);
+    //console.log("$$$$$$$$$$$=======", video);
     if (!video) return next(createError(404, "Video not found!"));
     // const getObjectParams_thumnail = {
     //   Bucket: process.env.AWS_BUCKET_NAME,
@@ -265,6 +265,7 @@ const likeVideo = async (req, res, next) => {
     next(err);
   }
 };
+
 
 //DISLIKE VIDEO
 const dislikeVideo = async (req, res, next) => {

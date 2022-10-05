@@ -12,19 +12,49 @@ type UserTypes = {
     token: string;
   };
 
+  type userDetail ={
+    userId : string
+    token : string
+
+  }
+
 export const UserApi = createApi({
     reducerPath: "userApi",
     baseQuery: fetchBaseQuery({
       baseUrl: "http://localhost:5000/api/v1/user",
     }),
-    tagTypes: ["user"],
+    tagTypes: ["subscribe","unsubscribe"],
     endpoints: (builder) => ({
       getUserByID: builder.query<UserTypes, string>({
         query: (id) => ({
           url: `/find/${id}`,
         }),
+        providesTags: ["subscribe"]
+
       }),
+      subscribedChannelLength: builder.query<UserTypes, string>({
+        query: (id) => ({
+          url: `/find/${id}`,
+        }),
+        providesTags: ["subscribe","unsubscribe"]
+      }),
+      subscribeChannel: builder.mutation<string, userDetail >({
+        query:(user)=>({
+          url: `/subscribe/${user.userId}`,
+            method:"PUT",
+            body: user
+        }),
+        invalidatesTags :["subscribe"]
+      }),
+      unSubscribeChannel: builder.mutation<string, userDetail >({
+        query:(user)=>({
+          url: `/unSubscribe/${user.userId}`,
+            method:"PUT",
+            body: user
+        }),
+        invalidatesTags :["unsubscribe"]
+      })
     }),
   });
   
-  export const {useGetUserByIDQuery} = UserApi
+  export const {useGetUserByIDQuery , useSubscribeChannelMutation, useSubscribedChannelLengthQuery} = UserApi

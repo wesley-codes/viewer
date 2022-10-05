@@ -1,5 +1,5 @@
 import React, { forwardRef, memo , useEffect} from "react";
-import ReactPlayer from "react-player";
+import ReactPlayer from "react-player/lazy";
 
 interface PlayerProps {
   ref?: React.MutableRefObject<any>;

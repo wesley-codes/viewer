@@ -46,17 +46,24 @@ const getUser = async (req, res, next) => {
 
 
 const subscribeUser = async (req, res, next) => {
+  console.log("subscribe to", req.params.id)
   try {
     if (req.params.id === req.user.id) {
       res.status(403).json("Can't subscribe to this channel ");
     } else {
       //GET USER ID AND ADD IT TO THE CHANNEL WE ARE SUBSCRIBING TO []
       const user = await User.findByIdAndUpdate(req.user.id, {
-        $push: { subscribedUsers: req.params.id }, //OTHER USER CHANNEL ID
+       $push: { subscribedUsers: req.params.id }, //OTHER USER CHANNEL ID
       });
+
+
+
+      //INCREASE CHANNEL SUBSCRIBED TO BY 1
       await User.findByIdAndUpdate(req.params.id, { $inc: { subscribers: 1 } });
-      res.status(200).json("Subscription sucessfull!");
+      res.status(200).json(user);
+      console.log(user)
     }
+
   } catch (err) {
     next(err);
   }
