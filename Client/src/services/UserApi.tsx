@@ -29,7 +29,7 @@ export const UserApi = createApi({
         query: (id) => ({
           url: `/find/${id}`,
         }),
-        providesTags: ["subscribe"]
+        providesTags: ["subscribe","unsubscribe" ]
 
       }),
       subscribedChannelLength: builder.query<UserTypes, string>({
