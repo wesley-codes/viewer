@@ -57,4 +57,4 @@ export const UserApi = createApi({
     }),
   });
   
-  export const {useGetUserByIDQuery , useSubscribeChannelMutation, useSubscribedChannelLengthQuery} = UserApi
+  export const {useGetUserByIDQuery , useSubscribeChannelMutation, useSubscribedChannelLengthQuery, useUnSubscribeChannelMutation} = UserApi

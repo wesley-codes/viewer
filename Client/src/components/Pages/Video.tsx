@@ -50,7 +50,7 @@ import {
   useGetVideoByIDQuery,
   useLikeVideoMutation,
 } from "../../services/VideoApi";
-import { useGetUserByIDQuery, useSubscribeChannelMutation, useSubscribedChannelLengthQuery } from "../../services/UserApi";
+import { useGetUserByIDQuery, useSubscribeChannelMutation, useSubscribedChannelLengthQuery, useUnSubscribeChannelMutation } from "../../services/UserApi";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../services/store";
 import { getCookie } from "../../Cookie/GetCookie";
@@ -95,12 +95,13 @@ const VideoDetails = () => {
   //RTK QUERY
   const [likevideo, { isSuccess }] = useLikeVideoMutation(); //like video RTK
   const [subscribeToChannel] = useSubscribeChannelMutation() //subscribe to channel
+  const [unSubscribeChannel] = useUnSubscribeChannelMutation()//unsubscribe from a channel
 
   const { data: video} = useGetVideoByIDQuery(id!); //Fetching a particular video by ID to play it
   const { data: user } = useGetUserByIDQuery(video?.userId!); //Fetching the particuar owner of the channel by passing the video.userId
   const { data: likesLength } = useGetLikesLengthQuery(id!);
   const {data: subsribedLength } = useSubscribedChannelLengthQuery(user?._id!)
-const  {data:FetchCurrentUser} = useGetUserByIDQuery(currentUser._id)
+const  {data:FetchCurrentUser} = useGetUserByIDQuery(currentUser?._id)
 
 
 //Redux Dispatch
@@ -289,8 +290,6 @@ const  dispatch = useDispatch<AppDispatch>()
 
   const openCommentModal = () => {
     setShowComment(true);
-
-    //if modal is true &&
   };
 
   useEffect(() => {
@@ -340,6 +339,8 @@ const userExistCurrentUser = FetchCurrentUser?.subscribedUsers.indexOf(user?._id
 console.log("######",userExistCurrentUser)
 if (userExistCurrentUser! >= 0){
   setSubscribe(true)
+}else if(userExistCurrentUser === -1){
+  setSubscribe(false)
 }
 
 
@@ -350,19 +351,32 @@ if (userExistCurrentUser! >= 0){
 
 
 
-//subscribe to a channel
-const subscribeChannelHandler = () =>{
+// <--subscribe to a channel -->
 const userDetails ={
   userId : user?._id!,
   token : token
 }
+const subscribeChannelHandler = () =>{
 console.log("userDetails",userDetails)
-  subscribeToChannel(userDetails).unwrap().then((data)=>{console.log(data)}).catch((err)=>{console.log(err)})
-
+  if(currentUser){
+    subscribeToChannel(userDetails).unwrap().then((data)=>{console.log(data)}).catch((err)=>{console.log(err)})
+    setSubscribe(true)
+  }else{
+    setSubscribe(false)
+    dispatch(savedLikedLink(location.pathname))
+    navigate("/signin")
+  }
 }
 
-
+// <-- unsubscribe from channel -->
 const unSubScribeChannelHandler = () => {
+  
+  //unsubscribe if user is loggedin
+  if(currentUser){
+
+    unSubscribeChannel(userDetails)
+    setSubscribe(false)
+  }
 
 }
 
@@ -469,11 +483,9 @@ console.log("subscribers length",user?.name, subsribedLength?.subscribedUsers.le
                     </div>
                   </AvatarContainer>
 
-                  {
-                    subscribe ? 
-                    <SubscribeBtn radius={5} onClick={subscribeChannelHandler}> Unsubscribe</SubscribeBtn>
-                 :                     <SubscribeBtn radius={5} onClick={subscribeChannelHandler}> Subscribe</SubscribeBtn>
-                }
+                  
+                    <SubscribeBtn radius={5} onClick={subscribe ? unSubScribeChannelHandler : subscribeChannelHandler}>{subscribe ? "Unsubscribe" : "Subscribe"}</SubscribeBtn>
+                
                 </UserAction>
                 <ActionBox>
                   <IconBox active={+likeAnimate}>

@@ -26,6 +26,7 @@ const UserReducer = createSlice({
       state.likedLinked = payload;
       console.log(state.likedLinked);
     },
+  
     logOut: (state) => {
       state.currentUser = null as unknown as UserTypes;
       state.likedLinked = null as unknown as string;

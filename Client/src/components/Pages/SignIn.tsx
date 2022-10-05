@@ -10,7 +10,6 @@ import {
   RightContainer,
   SignUpLogo,
   IconContainer,
-  Terms,
   BtnContainer,
   CreateBtn,
   ErrorContainer,
@@ -22,7 +21,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useUserSigninMutation } from "../../services/AuthApi";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import { AppDispatch, persistor, RootState } from "../../services/store";
+import { AppDispatch,  RootState } from "../../services/store";
 import { userLoggedIn } from "../../Features/UserSlice";
 import { setCookie } from "../../Cookie/SetCookie";
 const Container = styled.div`
@@ -85,7 +84,7 @@ const {likedLinked, currentUser} = useAppSelector(state => state.User)
   } = useForm<InputTypes>();
 
   useEffect(() => {
-    //clear localstorage whenever this page is opened
+    //if user exist navigate to homepage
 if(currentUser){
   navigate("/")
 }
@@ -107,7 +106,7 @@ if(currentUser){
           navigate("/");
         }else{
           //navigate user to the particular link which he was about to like
-          navigate(`${likedLinked}`)
+          navigate(`${likedLinked}`) 
         }
       })
       .catch((err) => {
